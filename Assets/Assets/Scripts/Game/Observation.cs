@@ -12,13 +12,12 @@ public class Observation : MonoBehaviour
 
     public Observation(GameState gameState)
     {
-        int[] pos = new int[2];
-        pos = gameState.GetPosition();
-        this.row = pos[0];
-        this.col = pos[1];
-        this.maze = gameState.maze;
-        this.iteration_number = gameState.iteration_number;
-        this.max_iterations = gameState.max_iterations;
+        int[] pos = gameState.GetPosition();
+        row = pos[0];
+        col = pos[1];
+        maze = gameState.maze;
+        iteration_number = gameState.iteration_number;
+        max_iterations = gameState.max_iterations;
     }
 
     public int[] GetPosition()
@@ -41,8 +40,8 @@ public class Observation : MonoBehaviour
         }
         else
         {
-            this.row = new_row;
-            this.col = new_col;
+            row = new_row;
+            col = new_col;
         }
     }
 
@@ -62,14 +61,10 @@ public class Observation : MonoBehaviour
 
     public bool IsTerminal()
     {
-        if ((iteration_number >= max_iterations)
+        return (iteration_number >= max_iterations)
         ||  maze.IsGoal(row, col)
-        ||  maze.IsHole(row, col))
-        {
-            return true;
-        }
-    
-        else return false; 
+        ||  maze.IsHole(row, col);
+
     }
 
     public bool ReachedGoal()

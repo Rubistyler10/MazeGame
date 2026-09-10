@@ -12,44 +12,41 @@ public class Maze : MonoBehaviour
         WALL = 3,
         GOAL = 4,
         TRAVELED = 5
-    }
+    };
 
-    public int num_rows { get; private set; }
-    public int num_cols { get; private set; }
-    public int[,] cells { get; private set; }
-
+    public int num_rows => cells.GetLength(0);
+    public int num_cols => cells.GetLength(1);
+    private int[,] cells = new int[,] {
+        {0, 0, 0, 0, 2, 2, 0, 4, 2},
+        {0, 0, 2, 0, 0, 0, 3, 0, 0},
+        {0, 0, 0, 3, 3, 0, 3, 3, 0},
+        {0, 2, 0, 0, 2, 0, 3, 0, 0},
+        {0, 0, 0, 0, 0, 0, 3, 0, 2},
+        {2, 3, 2, 0, 2, 0, 2, 0, 2},
+        {0, 0, 0, 0, 3, 0, 0, 0, 0},
+        {3, 3, 0, 2, 3, 3, 0, 3, 3},
+        {1, 0, 0, 0, 3, 3, 0, 0, 2}
+    };
     public bool IsStart(int row, int col)
     {
-        if (cells[row, col] == (int)CellType.START)
-            return true;
-
-        else return false;
+        return cells[row, col] == (int)CellType.START;
     }
 
     public bool IsHole(int row, int col)
     {
-        if (cells[row, col] == (int)CellType.HOLE)
-            return true;
-
-        else return false;
+        return cells[row, col] == (int)CellType.HOLE;
     }
 
 
     public bool IsWall(int row, int col)
     {
-        if (cells[row, col] == (int)CellType.WALL)
-            return true;
-
-        else return false;
+        return cells[row, col] == (int)CellType.WALL;
     }
 
 
     public bool IsGoal(int row, int col)
     {
-        if (cells[row, col] == (int)CellType.GOAL)
-            return true;
-
-        else return false;
+        return cells[row, col] == (int)CellType.GOAL;
     }
 
     public int[] GetStartPosition()
@@ -63,11 +60,12 @@ public class Maze : MonoBehaviour
                 {
                     pos[0] = i;
                     pos[1] = j;
+                    Debug.Log($"[MAZE][GETSTARTPOSITION] Start Position: ({pos[0]}, {pos[1]})");
                     return pos;
                 }
             }
         }
-        throw new System.Exception("No start position found in the maze");
+        throw new Exception("No start position found in the maze");
     }
 
     public int[] GetGoalPosition()
@@ -85,7 +83,7 @@ public class Maze : MonoBehaviour
                 }
             }
         }
-        throw new System.Exception("No goal position found in the maze");
+        throw new Exception("No goal position found in the maze");
     }
 
     public override string ToString()

@@ -17,14 +17,10 @@ public class GameState : MonoBehaviour
 
     public bool IsTerminal()
     {
-        if ((iteration_number >= max_iterations)
+        return (iteration_number >= max_iterations)
         ||  maze.IsGoal(pos_row, pos_col)
-        ||  maze.IsHole(pos_row, pos_col))
-        {
-            return true;
-        }
-    
-        else return false; 
+        ||  maze.IsHole(pos_row, pos_col);
+
     }
 
     public bool HasWon()
