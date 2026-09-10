@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
-    private Maze maze;
+    public Maze maze { get; private set; }
     private int pos_row;
     private int pos_col;
     public int iteration_number { get; private set; } = 0;
-    private int max_iterations;
-    private bool terminal_is_win;
+    public int max_iterations { get; private set; } = 0;
 
     public Observation GetObservation()
     {
@@ -33,16 +32,14 @@ public class GameState : MonoBehaviour
         return maze.IsGoal(pos_row, pos_col);
     }
 
-    public void Reset(Maze maze, int max_iterations)
+    public void ResetGameState(Maze maze, int max_iterations)
     {
-        int[] start_pos = new int[2];
-        start_pos = maze.GetStartPosition();
+        int[] start_pos = maze.GetStartPosition();
         this.maze = maze;
         pos_row = start_pos[0];
         pos_col = start_pos[1];
         iteration_number = 0;
         this.max_iterations = max_iterations;
-        terminal_is_win = false;
     }
 
     public void SetPosition(int new_row, int new_col)
@@ -52,7 +49,7 @@ public class GameState : MonoBehaviour
             Debug.Log("[GAMESTATE][INVALID] Tried to move into a wall, ignoring action");
             return;
         }
-        else if (new_row < 0 || new_row >= maze.rows || new_col < 0 || new_col >= maze.cols)
+        else if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols)
         {
             Debug.Log("[GAMESTATE][INVALID] Tried to move out of the maze, ignoring action");
             return;
@@ -67,7 +64,7 @@ public class GameState : MonoBehaviour
 
     public int[] GetPosition()
     {
-        int[] pos = [pos_row, pos_col];
+        int[] pos = new int[2] { pos_row, pos_col };
         return pos;
     }
 

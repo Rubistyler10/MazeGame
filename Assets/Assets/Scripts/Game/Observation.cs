@@ -23,7 +23,7 @@ public class Observation : MonoBehaviour
 
     public int[] GetPosition()
     {
-        int[] pos = [this.row, this.col];
+        int[] pos = new int[2] { row, col };
         return pos;
     }
 
@@ -34,7 +34,7 @@ public class Observation : MonoBehaviour
             Debug.Log("[OBSERVATION][INVALID] Tried to move into a wall, ignoring action");
             return;
         }
-        else if (new_row < 0 || new_row >= maze.rows || new_col < 0 || new_col >= maze.cols)
+        else if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols)
         {
             Debug.Log("[OBSERVATION][INVALID] Tried to move out of the maze, ignoring action");
             return;

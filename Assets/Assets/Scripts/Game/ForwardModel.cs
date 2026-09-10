@@ -10,22 +10,25 @@ public class ForwardModel : MonoBehaviour
         int row = pos[0];
         int col = pos[1];
 
-        switch (action)
+        if (action.IsUp())
         {
-            case action.IsUp():
-                row -= 1;
-                break;
-            case action.IsDown():
-                row += 1;
-                break;
-            case action.IsLeft():
-                col -= 1;
-                break;
-            case action.IsRight():
-                col += 1;
-                break;
-            default:
-                throw new System.Exception("Invalid action");
+            row -= 1;
+        }
+        else if (action.IsDown())
+        {
+            row += 1;
+        }
+        else if (action.IsLeft())
+        {
+            col -= 1;
+        }
+        else if (action.IsRight())
+        {
+            col += 1;
+        }
+        else
+        {
+            throw new System.Exception("Invalid action");
         }
 
         gameState.SetPosition(row, col);
@@ -39,22 +42,25 @@ public class ForwardModel : MonoBehaviour
         int row = pos[0];
         int col = pos[1];
 
-        switch (action)
+        if (action.IsUp())
         {
-            case action.IsUp():
-                row -= 1;
-                break;
-            case action.IsDown():
-                row += 1;
-                break;
-            case action.IsLeft():
-                col -= 1;
-                break;
-            case action.IsRight():
-                col += 1;
-                break;
-            default:
-                throw new System.Exception("Invalid action");
+            row -= 1;
+        }
+        else if (action.IsDown())
+        {
+            row += 1;
+        }
+        else if (action.IsLeft())
+        {
+            col -= 1;
+        }
+        else if (action.IsRight())
+        {
+            col += 1;
+        }
+        else
+        {
+            throw new System.Exception("Invalid action");
         }
 
         observation.SetPosition(row, col);

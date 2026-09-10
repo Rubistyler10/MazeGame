@@ -29,14 +29,14 @@ public class Game : MonoBehaviour
     }
 
 
-    private bool SetupGame(Maze maze, Player player, int budget, int max_iterations)
+    private void SetupGame(Maze maze, Player player, int budget, int max_iterations)
     {
         this.maze = maze;
         this.player = player;
         this.budget = budget;
         this.max_iterations = max_iterations;
 
-        gameState.Reset(maze, max_iterations);
+        gameState.ResetGameState(maze, max_iterations);
     }
 
     // The simulation advances when the manager decides, to allow for animations and such
@@ -49,17 +49,17 @@ public class Game : MonoBehaviour
         if (!maze.IsGoal(currentPos[0], currentPos[1])
         || !maze.IsStart(currentPos[0], currentPos[1]))
         {
-            travelled_path.Enqueue();
+            travelled_path.Enqueue(currentPos);
         }
 
-        Action action = player.think(observation, budget);
+        Action action = player.Think(observation, budget);
         if (action == null)
         {
             throw new System.Exception("Player returned null action");
         }
         else
         {
-            self.forwardModel.Play(gameState, action);
+            forwardModel.Play(gameState, action);
         }
 
         game_ended = gameState.IsTerminal();
