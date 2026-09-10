@@ -1,6 +1,4 @@
-using UnityEngine;
-
-public class Action : MonoBehaviour
+public class Action
 {
     public int action_id {get; private set;} = 0;
     public Action(int action_id = 0)
@@ -63,6 +61,23 @@ public class Action : MonoBehaviour
                 break;
             default:
                 throw new System.Exception("Invalid action");
+        }
+    }
+
+    public override string ToString()
+    {
+        switch (action_id)
+        {
+            case 1:
+                return "Up";
+            case 2:
+                return "Right";
+            case 3:
+                return "Down";
+            case 4:
+                return "Left";
+            default:
+                return "Invalid action";
         }
     }
 }

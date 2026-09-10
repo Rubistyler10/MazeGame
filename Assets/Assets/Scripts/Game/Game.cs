@@ -18,8 +18,8 @@ public class Game : MonoBehaviour
 
     private void Awake()
     {
-        gameState = GetComponent<GameState>();
-        forwardModel = GetComponent<ForwardModel>();
+        gameState = new GameState();
+        forwardModel = new ForwardModel();
         travelled_path = new Queue();
     }
 
@@ -36,7 +36,7 @@ public class Game : MonoBehaviour
     }
 
     // The simulation advances when the manager decides, to allow for animations and such
-    public void Step()
+    public Action Step()
     {
         Observation observation = gameState.GetObservation();
         int[] currentPos = observation.GetPosition();
@@ -47,14 +47,14 @@ public class Game : MonoBehaviour
             travelled_path.Enqueue(currentPos);
         }
 
-        Action action = player.Think(observation, budget);
-        if (action == null)
+        Action player_action = player.Think(observation, budget);
+        if (player_action == null)
         {
             throw new System.Exception("Player returned null action");
         }
         else
         {
-            forwardModel.Play(gameState, action);
+            forwardModel.Play(gameState, player_action);
         }
 
         game_ended = gameState.IsTerminal();
@@ -62,10 +62,17 @@ public class Game : MonoBehaviour
         {
             final_iteration_number = gameState.iteration_number;
         }
+
+        return player_action;
     }
 
     public Queue GetTravelledPath()
     {
         return travelled_path;
+    }
+
+    public int[] GetCurrentPosition()
+    {
+        return gameState.GetPosition();
     }
 }

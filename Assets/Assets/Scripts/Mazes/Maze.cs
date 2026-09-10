@@ -16,7 +16,8 @@ public class Maze : MonoBehaviour
 
     public int num_rows => cells.GetLength(0);
     public int num_cols => cells.GetLength(1);
-    private int[,] cells = new int[,] {
+    private int[,] cells = new int[,]{};
+    /* private int[,] cells = new int[,] {
         {0, 0, 0, 0, 2, 2, 0, 4, 2},
         {0, 0, 2, 0, 0, 0, 3, 0, 0},
         {0, 0, 0, 3, 3, 0, 3, 3, 0},
@@ -26,7 +27,7 @@ public class Maze : MonoBehaviour
         {0, 0, 0, 0, 3, 0, 0, 0, 0},
         {3, 3, 0, 2, 3, 3, 0, 3, 3},
         {1, 0, 0, 0, 3, 3, 0, 0, 2}
-    };
+    }; */
     public bool IsStart(int row, int col)
     {
         return cells[row, col] == (int)CellType.START;

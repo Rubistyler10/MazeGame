@@ -10,10 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6414106859616981006}
   - component: {fileID: 5438614557097650640}
-  - component: {fileID: 2932628936206000834}
-  - component: {fileID: 6148494176677984755}
-  - component: {fileID: 1633988207165421240}
-  - component: {fileID: 3813030899250385257}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -48,51 +44,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26f0bea88baf16c13a724cb0649985b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game
---- !u!114 &2932628936206000834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952552494255310285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57104f2349d9abb0f973c1f742da9567, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameState
---- !u!114 &6148494176677984755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952552494255310285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 940578913052e4f72afbbff8a5549617, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Observation
---- !u!114 &1633988207165421240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952552494255310285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d2a5c7870aa4d612bcbac3ba7270f69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ForwardModel
---- !u!114 &3813030899250385257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1952552494255310285}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc392d6211a6ddbe7877ef7427b0fc2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Action

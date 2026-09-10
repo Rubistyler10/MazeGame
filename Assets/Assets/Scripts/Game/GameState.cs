@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class GameState : MonoBehaviour
+public class GameState
 {
     public Maze maze { get; private set; }
     private int pos_row;
@@ -40,14 +40,15 @@ public class GameState : MonoBehaviour
 
     public void SetPosition(int new_row, int new_col)
     {
-        if (maze.IsWall(new_row, new_col))
-        {
-            Debug.Log("[GAMESTATE][INVALID] Tried to move into a wall, ignoring action");
-            return;
-        }
-        else if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols)
+
+        if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols)
         {
             Debug.Log("[GAMESTATE][INVALID] Tried to move out of the maze, ignoring action");
+            return;
+        }
+        else if (maze.IsWall(new_row, new_col))
+        {
+            Debug.Log("[GAMESTATE][INVALID] Tried to move into a wall, ignoring action");
             return;
         }
         else

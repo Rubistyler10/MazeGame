@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Observation : MonoBehaviour
+public class Observation
 {
     int row = 0;
     int col = 0;
@@ -47,6 +47,7 @@ public class Observation : MonoBehaviour
 
     public Action[] GetListActions()
     {
+
         Action[] actions = new Action[4];
         actions[0] = new Action();
         actions[0].SetUp();

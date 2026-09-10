@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ForwardModel : MonoBehaviour
+public class ForwardModel
 {
 
     public void Play(GameState gameState, Action action)

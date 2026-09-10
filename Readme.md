@@ -2,13 +2,15 @@
 - [x] Player base script
 - [x] Maze base script
 - [ ] Copy example mazes
-- [ ] Implement Game visualization and Management
+- [x] Implement Game visualization and Management
     - GameManager must be a GameObject in the scene that is tasked with creating [Game] objects and the rest of dependencies, assign them a chosen [Maze] and [Player] and spawn a visualization of them in the game world.
     - **Idea**: After every step, record previous and current states of the board and chosen Action. This way an animation can be played even on invalid actions.
 - [ ] HumanPlayer script using Unity inputs instead of console commands.
+- [ ] Add list of players and mazes to GameManager for a [test_all] functionality.
 - [ ] Camera adjusts to maze size and is centered.
+- [ ] Visualization has animation for bumping into a wall with a setting to make it optional
 - [ ] In-game menu for selecting Players, Mazes and starting games
-
+- [ ] Finish Readme documentation
 
 # Scripts
 ## Game
