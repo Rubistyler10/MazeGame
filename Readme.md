@@ -6,7 +6,8 @@
     - GameManager must be a GameObject in the scene that is tasked with creating [Game] objects and the rest of dependencies, assign them a chosen [Maze] and [Player] and spawn a visualization of them in the game world.
     - **Idea**: After every step, record previous and current states of the board and chosen Action. This way an animation can be played even on invalid actions.
 - [ ] HumanPlayer script using Unity inputs instead of console commands.
-
+- [ ] Camera adjusts to maze size and is centered.
+- [ ] In-game menu for selecting Players, Mazes and starting games
 
 
 # Scripts
