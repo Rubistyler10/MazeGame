@@ -30,22 +30,10 @@ public class GameManager : MonoBehaviour
     private GameObject player_instance;
     private Game gameScript;
     private bool is_animating = false;
-    private InputAction step_game_action;
     Vector3 previous_pos = Vector3.zero;
     Action player_action = null;
     Vector3 target_pos = Vector3.zero;
     bool game_ended = false;
-
-    void OnEnable()
-    {
-        step_game_action = InputSystem.actions.FindAction("Game Manager/Step Game");
-        step_game_action?.Enable();
-    }
-
-    void OnDisable()
-    {
-        step_game_action?.Disable();
-    }
 
     void Start()
     {
@@ -65,6 +53,8 @@ public class GameManager : MonoBehaviour
     void SpawnGameWorld(){
         // Create an empty parent object to hold the maze
         GameObject maze_parent = new GameObject("Maze");
+        maze_parent.transform.SetParent(transform, false);
+        maze_parent.transform.localPosition = Vector3.zero;
 
         // Spawn the maze cells
         for (int spawn_row = 0; spawn_row < maze.num_rows; spawn_row++)
@@ -94,14 +84,14 @@ public class GameManager : MonoBehaviour
                 }
 
                 GameObject cell = Instantiate(cell_prefab, new Vector3(spawn_row, 0, spawn_col), Quaternion.identity);
-                cell.transform.parent = maze_parent.transform;
+                cell.transform.SetParent(maze_parent.transform, false);
             }
         }
 
         // Spawn the player
         int[] start_pos = maze.GetStartPosition();
         player_instance = Instantiate(player_prefab, new Vector3(start_pos[0], 1, start_pos[1]), Quaternion.identity);
-        player_instance.transform.parent = maze_parent.transform;
+        player_instance.transform.SetParent(maze_parent.transform, false);
     }
 
     void Update()
@@ -110,18 +100,12 @@ public class GameManager : MonoBehaviour
         if (!visualize_game) gameScript.Step();
 
         var keyboard = Keyboard.current;
-        if (auto_play)
-        {
-            auto_play_timer += Time.deltaTime;
-        }
 
-        if (auto_play && !is_animating && auto_play_speed > 0f &&
-            auto_play_timer >= 1f / auto_play_speed)
+        if (auto_play && !is_animating)
         {
             // Step the game
             StepGame();
             is_animating = true;
-            auto_play_timer -= 1f / auto_play_speed;
         }
         // On Space key press, Step
         else if (keyboard.spaceKey.wasPressedThisFrame && !is_animating)
@@ -134,9 +118,9 @@ public class GameManager : MonoBehaviour
         if (is_animating)
         {
             // Move the player instance to the new position
-            MovePlayerInstance(previous_pos, target_pos);
+            MovePlayerInstance(target_pos);
             // Check if the player has reached the target position
-            if (Vector3.Distance(player_instance.transform.position, target_pos) < 0.01f)
+            if (Vector3.Distance(player_instance.transform.localPosition, target_pos) < 0.01f)
             {
                 is_animating = false;
 
@@ -148,8 +132,10 @@ public class GameManager : MonoBehaviour
                     return;
                 }
             }
+            else Debug.Log("[GAMEMANAGER][UPDATE] Player is animating, distance to target: " + Vector3.Distance(player_instance.transform.position, target_pos));
         }
         
+        Debug.Log("[GAMEMANAGER][UPDATE] Is Animating: " + is_animating + ", Game Ended: " + game_ended);
     }
 
     void StepGame()
@@ -162,11 +148,12 @@ public class GameManager : MonoBehaviour
         target_pos = TranslatePositionToWorldCoordinates(gameScript.GetCurrentPosition()[0], gameScript.GetCurrentPosition()[1]);
     }
 
-    void MovePlayerInstance(Vector3 previous_pos, Vector3 target_pos)
+    void MovePlayerInstance(Vector3 target_pos)
     {
+        Debug.Log("[GAMEMANAGER][MOVEPLAYERINSTANCE] Moving player from " + previous_pos + " to " + target_pos);
         // Move the player instance to the new position, with a smooth transition
-        float step = 5f * Time.deltaTime; // Adjust the speed as needed
-        player_instance.transform.position = Vector3.MoveTowards(player_instance.transform.position, target_pos, step);
+        float step = auto_play_speed * Time.deltaTime; // Adjust the speed as needed
+        player_instance.transform.localPosition = Vector3.MoveTowards(player_instance.transform.localPosition, target_pos, step);
     }
 
     Vector3 TranslatePositionToWorldCoordinates(int row, int col)

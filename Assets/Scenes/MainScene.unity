@@ -254,6 +254,65 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2172208301606144212, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}
   m_PrefabInstance: {fileID: 1979039323}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1162000816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1162000818}
+  - component: {fileID: 1162000817}
+  m_Layer: 0
+  m_Name: GameManager (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1162000817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162000816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d1d0291782522943b56d02566378038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  game_prefab: {fileID: 1952552494255310285, guid: 4687b1cb0883f554eb5282060e0a0a3d, type: 3}
+  maze: {fileID: 11400000, guid: ac82d42a45e37e4479d4301a3eb6dac6, type: 2}
+  player: {fileID: 1474673202}
+  budget: 100
+  max_iterations: 0
+  visualize_game: 1
+  auto_play: 1
+  auto_play_speed: 100
+  player_prefab: {fileID: 848359483221634351, guid: d91413bb4bb2da74182219a4437f0996, type: 3}
+  player_dead_prefab: {fileID: 848359483221634351, guid: 4dd2e10f0de959840b144232fb613a93, type: 3}
+  empty_cell_prefab: {fileID: 142590281981850935, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}
+  start_cell_prefab: {fileID: 798460826592014407, guid: b23b45dc88fff9842bf9c3a407ba46c3, type: 3}
+  hole_cell_prefab: {fileID: 1812159235079957068, guid: 511fc2e693032154885eadeac80a025a, type: 3}
+  wall_cell_prefab: {fileID: 5148925136067254975, guid: 759cda0da40f28c4a90e15dc9c756bde, type: 3}
+  goal_cell_prefab: {fileID: 1491916295773960168, guid: e4f7d1407f4fa5a4fa0ebab218f3cb92, type: 3}
+--- !u!4 &1162000818
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1162000816}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1474673202 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4859025085630372150, guid: 261102439229a504d8f1ab01c0d99ad4, type: 3}
@@ -479,13 +538,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   game_prefab: {fileID: 1952552494255310285, guid: 4687b1cb0883f554eb5282060e0a0a3d, type: 3}
-  maze: {fileID: 1916542924}
+  maze: {fileID: 11400000, guid: 88a70f94809f4a6468df561032b8de87, type: 2}
   player: {fileID: 1474673202}
   budget: 100
   max_iterations: 100
   visualize_game: 1
   auto_play: 1
-  auto_play_speed: 10
+  auto_play_speed: 1
   player_prefab: {fileID: 848359483221634351, guid: d91413bb4bb2da74182219a4437f0996, type: 3}
   player_dead_prefab: {fileID: 848359483221634351, guid: 4dd2e10f0de959840b144232fb613a93, type: 3}
   empty_cell_prefab: {fileID: 142590281981850935, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}
@@ -503,50 +562,6 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1916542923
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 4293078412150222956, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-  m_PrefabInstance: {fileID: 5606139843521412076}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1916542925}
-  - component: {fileID: 1916542924}
-  m_Layer: 0
-  m_Name: MazeTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1916542924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 7707694830523545982, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-  m_PrefabInstance: {fileID: 5606139843521412076}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916542923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3bf8f559478b298d5b7011778ae3b5d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Maze
---- !u!4 &1916542925
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-  m_PrefabInstance: {fileID: 5606139843521412076}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1916542923}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.78772, y: 0, z: 1.84767}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -946,67 +961,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4f7d1407f4fa5a4fa0ebab218f3cb92, type: 3}
---- !u!1001 &5606139843521412076
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4293078412150222956, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_Name
-      value: MazeTest
-      objectReference: {fileID: 0}
-    - target: {fileID: 4293078412150222956, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -15.78772
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.84767
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5829789123293515066, guid: f494e7625810d564795a85d11a4a175f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f494e7625810d564795a85d11a4a175f, type: 3}
 --- !u!1001 &8468929380216022552
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1156,12 +1110,12 @@ SceneRoots:
   - {fileID: 234663173}
   - {fileID: 1742354741}
   - {fileID: 1797184080}
+  - {fileID: 1162000818}
   - {fileID: 51786841447705498}
   - {fileID: 8585447432189385039}
   - {fileID: 27295851281434117}
   - {fileID: 8468929380216022552}
   - {fileID: 4715815990479188783}
   - {fileID: 1117118168848991772}
-  - {fileID: 5606139843521412076}
   - {fileID: 1648626953120737217}
   - {fileID: 644549528}

@@ -17,7 +17,12 @@ public class GameState
 
     public bool IsTerminal()
     {
-        return (iteration_number >= max_iterations)
+        bool maxed_iterations;
+        // This allows for infinite time for players, be careful
+        if (max_iterations <= 0)  maxed_iterations = false; 
+        else maxed_iterations = iteration_number >= max_iterations;
+
+        return maxed_iterations
         ||  maze.IsGoal(pos_row, pos_col)
         ||  maze.IsHole(pos_row, pos_col);
 

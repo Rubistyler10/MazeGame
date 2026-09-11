@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Maze : MonoBehaviour
+public class Maze : ScriptableObject
 {
 
     private enum CellType : int
@@ -14,8 +14,11 @@ public class Maze : MonoBehaviour
         TRAVELED = 5
     };
 
-    public int num_rows => cells.GetLength(0);
-    public int num_cols => cells.GetLength(1);
+    public int num_rows => rows;
+    public int num_cols => columns;
+    [SerializeField] private int rows;
+    [SerializeField] private int columns;
+    [SerializeField] private int[] serializedCells = Array.Empty<int>();
     private int[,] cells = new int[,]{};
     /* private int[,] cells = new int[,] {
         {0, 0, 0, 0, 2, 2, 0, 4, 2},
@@ -28,6 +31,22 @@ public class Maze : MonoBehaviour
         {3, 3, 0, 2, 3, 3, 0, 3, 3},
         {1, 0, 0, 0, 3, 3, 0, 0, 2}
     }; */
+
+    protected void Initialize(int[,] layout)
+    {
+        rows = layout.GetLength(0);
+        columns = layout.GetLength(1);
+        serializedCells = new int[rows * columns];
+        cells = layout;
+        for (int row = 0; row < rows; row++)
+        {
+            for (int column = 0; column < columns; column++)
+            {
+                serializedCells[row * columns + column] = layout[row, column];
+            }
+        }
+    }
+
     public bool IsStart(int row, int col)
     {
         return cells[row, col] == (int)CellType.START;

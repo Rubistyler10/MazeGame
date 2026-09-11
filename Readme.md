@@ -1,7 +1,7 @@
 # TO DO
 - [x] Player base script
 - [x] Maze base script
-- [ ] Copy example mazes
+- [x] Copy example mazes
 - [x] Implement Game visualization and Management
     - GameManager must be a GameObject in the scene that is tasked with creating [Game] objects and the rest of dependencies, assign them a chosen [Maze] and [Player] and spawn a visualization of them in the game world.
     - **Idea**: After every step, record previous and current states of the board and chosen Action. This way an animation can be played even on invalid actions.
@@ -12,7 +12,7 @@
 - [ ] In-game menu for selecting Players, Mazes and starting games
 - [ ] Finish Readme documentation
 
-# Scripts
+# C# Scripts
 ## Game
 _Game.cs_ controls the main flow of the game itself. It tells the other scripts when to participate in Step().
 It also saves the path taken by the player of the current game.
@@ -52,3 +52,20 @@ It only holds 2 functions: Play() and Test(). They effectively do the same: appl
 
 ## Action
 _Action.cs_ defines the Action object that is used to represent a move in the game. In this version of the game it will always be 4 directions of movement that could be represented by an Enumerator, but this approach allows for expansion of the game's rules and is just as readable in code. 
+
+# Unity implementation
+## Mazes
+Maze layouts are ScriptableObject assets. To create a new maze:
+
+1. Create a C# class that inherits from `Maze`.
+2. Initialize its layout from `OnEnable()` with `Initialize(new int[,] { ... })`.
+3. Create a generator asset with `Assets > Create > Mazes > Script Asset Generator`.
+4. Drag the new C# script into the generator's `Maze Script` field.
+5. Set the output folder, then click `Create Maze Asset`.
+6. Drag the generated `.asset` into the `Maze` field on the `GameManager`.
+
+Cell values are `0` empty, `1` start, `2` hole, `3` wall, and `4` goal.
+The generator validates that the assigned script is a concrete class derived
+from `Maze`. Unity does not serialize multidimensional `int[,]` fields, so the
+base class stores a flattened serialized cell array while the C# layout remains
+the source of truth.
