@@ -270,7 +270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1162000817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,7 +283,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d1d0291782522943b56d02566378038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  game_prefab: {fileID: 1952552494255310285, guid: 4687b1cb0883f554eb5282060e0a0a3d, type: 3}
   maze: {fileID: 11400000, guid: 937e1e7ec81fcb04391a423f87e63573, type: 2}
   player: {fileID: 11400000, guid: d0cdd5d74cc160245a429b2cf69533de, type: 2}
   budget: 100
@@ -291,6 +290,8 @@ MonoBehaviour:
   visualize_game: 1
   auto_play: 1
   auto_play_speed: 100
+  allow_bump_animation: 1
+  bump_animation_speed_multiplier: 1
   player_prefab: {fileID: 848359483221634351, guid: d91413bb4bb2da74182219a4437f0996, type: 3}
   player_dead_prefab: {fileID: 848359483221634351, guid: 4dd2e10f0de959840b144232fb613a93, type: 3}
   empty_cell_prefab: {fileID: 142590281981850935, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}
@@ -526,14 +527,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d1d0291782522943b56d02566378038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  game_prefab: {fileID: 1952552494255310285, guid: 4687b1cb0883f554eb5282060e0a0a3d, type: 3}
   maze: {fileID: 11400000, guid: 88a70f94809f4a6468df561032b8de87, type: 2}
   player: {fileID: 11400000, guid: d0cdd5d74cc160245a429b2cf69533de, type: 2}
   budget: 100
   max_iterations: 100
   visualize_game: 1
   auto_play: 1
-  auto_play_speed: 1
+  auto_play_speed: 10
+  allow_bump_animation: 0
+  bump_animation_speed_multiplier: 1.5
   player_prefab: {fileID: 848359483221634351, guid: d91413bb4bb2da74182219a4437f0996, type: 3}
   player_dead_prefab: {fileID: 848359483221634351, guid: 4dd2e10f0de959840b144232fb613a93, type: 3}
   empty_cell_prefab: {fileID: 142590281981850935, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}

@@ -30,18 +30,28 @@ public class GameManager : MonoBehaviour
 
 
     private GameObject player_instance;
+    private GameObject maze_parent;
     private Game gameScript;
     private bool is_animating = false;
     Vector3 previous_pos = Vector3.zero;
     Action player_action = null;
     Vector3 target_pos = Vector3.zero;
-    bool game_ended = false;
+    private bool game_ended = false;
+    private GameObject player_dead_instance;
+    private InputAction stepAction;
+    private InputAction resetAction;
+    private InputAction forceResetAction;
+    private InputAction autoPlayAction;
 
     void Start()
     {
         CreateGame();
         // Spawn the game world representation of the game
         if (visualize_game) SpawnGameWorld();
+        stepAction = InputSystem.actions.FindAction("Step");
+        resetAction = InputSystem.actions.FindAction("Reset");
+        forceResetAction = InputSystem.actions.FindAction("Force Reset");
+        autoPlayAction = InputSystem.actions.FindAction("Autoplay");
     }
 
     void CreateGame()
@@ -55,7 +65,7 @@ public class GameManager : MonoBehaviour
 
     void SpawnGameWorld(){
         // Create an empty parent object to hold the maze
-        GameObject maze_parent = new GameObject("Maze");
+        maze_parent = new GameObject("Maze");
         maze_parent.transform.SetParent(transform, false);
         maze_parent.transform.localPosition = Vector3.zero;
 
@@ -91,6 +101,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        SpawnPlayerInstance(maze_parent);
+    }
+
+    void SpawnPlayerInstance(GameObject maze_parent)
+    {
         // Spawn the player
         int[] start_pos = maze.GetStartPosition();
         player_instance = Instantiate(player_prefab, new Vector3(start_pos[1], 1, -start_pos[0]), Quaternion.identity);
@@ -99,35 +114,71 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if(forceResetAction.WasPressedThisFrame())
+        {
+            ResetGame();
+        }
+        if(resetAction.WasPressedThisFrame() && game_ended)
+        {
+            ResetGame();
+        }
+        
         if (game_ended) return;
+
         if (!visualize_game) gameScript.Step();
 
-        var keyboard = Keyboard.current;
+        bool step_pressed = stepAction.IsPressed();
+
+        if (autoPlayAction.WasPressedThisFrame())
+        {
+            auto_play = !auto_play;
+        }
+
 
         if (!is_animating)
         {
 
-            if (gameScript.game_ended)
+            if (gameScript.game_ended && !game_ended)
             {
                 game_ended = true;
-                Instantiate(player_dead_prefab, player_instance.transform.position, Quaternion.identity);
+                player_dead_instance = Instantiate(player_dead_prefab, player_instance.transform.position, Quaternion.identity);
                 player_instance.SetActive(false);
                 return;
             }
 
 
-            if (auto_play || keyboard.spaceKey.wasPressedThisFrame)
+            if (auto_play || step_pressed)
             {
                 // Step the game
                 StepGame();
                 is_animating = true;
             }
+
         }
 
         if (is_animating)
         {
             // Move the player instance to the new position
             MovePlayerInstance(allow_bump_animation);
+            CheckAnimationEnd();
+        }
+    }
+
+    void ResetGame()
+    {
+        // Reset the game
+        CreateGame();
+        if (visualize_game)
+        {
+            // Only need to destroy the player to respawn, maze stays the same
+            Destroy(player_instance); 
+            Destroy(player_dead_instance);
+            SpawnPlayerInstance(maze_parent);
+            previous_pos = Vector3.zero;
+            target_pos = Vector3.zero;
+            player_action = null;
+            is_animating = false;
+            game_ended = false;
         }
     }
 

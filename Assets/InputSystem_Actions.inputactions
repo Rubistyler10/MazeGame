@@ -7,9 +7,39 @@
             "id": "9f5d47a6-00a1-4cb2-b77f-418b7b63aed8",
             "actions": [
                 {
-                    "name": "Step Game",
+                    "name": "Step",
                     "type": "Button",
                     "id": "292c871e-7d5b-4a51-a432-d80b59af9f43",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "030cd916-7158-405d-8dc1-d834f09d13ed",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Force Reset",
+                    "type": "Button",
+                    "id": "c2b39fd6-b7fc-4f00-b2d1-ccc3f1b554a3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Autoplay",
+                    "type": "Button",
+                    "id": "a0f4411c-a589-4036-bdf6-0b3e953c506b",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -24,8 +54,125 @@
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Step",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "96414c57-0bf5-4407-a6ce-c779c10e529e",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
                     "groups": "",
-                    "action": "Step Game",
+                    "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "One Modifier",
+                    "id": "631c3959-4d99-49d1-bdd0-ac288f5350e0",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Force Reset",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "75db9808-9066-4499-bcfa-c8943ff24a76",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Force Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "c4444004-0a26-4ed0-bb2a-1a52a8d42ed5",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Force Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "335403a4-73c7-4439-800b-3e4632ba4c4f",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Autoplay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "HumanPlayer",
+            "id": "908b98b6-c779-4ca8-91d2-9f6d52f8ca02",
+            "actions": [
+                {
+                    "name": "MovementAxis",
+                    "type": "Value",
+                    "id": "160ff2d9-374f-4a4b-bb26-1584a7f7857c",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "757890ee-427d-431b-ae69-3da83c686d95",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MovementAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "efcfd35b-8dfd-4fb4-a59e-e83f3d0a6786",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MovementAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d082b118-8fd1-4c77-8972-e1b64040e101",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MovementAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9eb08fdc-418f-447a-8372-d428c96f4c6f",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MovementAxis",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
