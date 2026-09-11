@@ -6,11 +6,11 @@
     - GameManager must be a GameObject in the scene that is tasked with creating [Game] objects and the rest of dependencies, assign them a chosen [Maze] and [Player] and spawn a visualization of them in the game world.
     - **Idea**: After every step, record previous and current states of the board and chosen Action. This way an animation can be played even on invalid actions.
 - [ ] HumanPlayer script using Unity inputs instead of console commands.
-- [ ] Swap the hardcoded Spacebar input for Stepping the game for an Input System approach
+- [x] Swap the hardcoded Spacebar input for Stepping the game for an Input System approach
 - [ ] Add list of players and mazes to GameManager for a [test_all] functionality.
 - [x] Visualization has animation for bumping into a wall with a setting to make it optional
-- [ ] Finish Readme documentation
 - [ ] Implement Data Gathering into csv files
+- [ ] Finish Readme documentation
 
 # C# Scripts
 ## Game
@@ -79,6 +79,14 @@ Making a Step requires input (Spacebar), unless `Autoplay` is enabled, which mak
 The animation system also allows for an optional behaviour for the cases where the [Player] tries to move to a wall and would normally stay in place, making it travel towards the wall and coming back after bumping against it.
 
 Inspector fields for the assets used has been added in case you want to change the art.
+
+### Inputs
+[GameManager] also allows for inputs during gameplay to control the simulation, this inputs can be changed in the Input System Settings:
+- `Spacebar` steps the simulation.
+- `R` resets the simulation **only when the game has ended**
+- `Shift + R` force resets the simulation at any point
+- `A` toggles autoplay on and off
+These inputs affect **all** [GameManager] instances.
 
 
 ## Mazes

@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
     private InputAction resetAction;
     private InputAction forceResetAction;
     private InputAction autoPlayAction;
+    private InputAction increaseSpeedAction;
+    private InputAction decreaseSpeedAction;
 
     void Start()
     {
@@ -52,6 +54,8 @@ public class GameManager : MonoBehaviour
         resetAction = InputSystem.actions.FindAction("Reset");
         forceResetAction = InputSystem.actions.FindAction("Force Reset");
         autoPlayAction = InputSystem.actions.FindAction("Autoplay");
+        increaseSpeedAction = InputSystem.actions.FindAction("Increase Speed");
+        decreaseSpeedAction = InputSystem.actions.FindAction("Decrease Speed");
     }
 
     void CreateGame()
@@ -132,6 +136,15 @@ public class GameManager : MonoBehaviour
         if (autoPlayAction.WasPressedThisFrame())
         {
             auto_play = !auto_play;
+        }
+
+        if (increaseSpeedAction.WasPressedThisFrame())
+        {
+            auto_play_speed += 0.5f;
+        }
+        if (decreaseSpeedAction.WasPressedThisFrame())
+        {
+            auto_play_speed = Mathf.Max(0.5f, auto_play_speed - 0.5f);
         }
 
 

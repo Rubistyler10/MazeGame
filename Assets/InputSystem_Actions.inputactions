@@ -45,6 +45,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "Increase Speed",
+                    "type": "Button",
+                    "id": "73431f9d-b9d7-4a59-9c63-33e63a79749f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Decrease Speed",
+                    "type": "Button",
+                    "id": "f48bc964-53c7-4e63-a011-8ac3d0c995dc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -111,6 +131,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Autoplay",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "43a8c646-8a59-4693-bb66-b5c343c2e047",
+                    "path": "<Keyboard>/rightBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Increase Speed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c7d49ba7-5073-4a8f-a40b-125a8fa07b7c",
+                    "path": "<Keyboard>/slash",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Decrease Speed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
