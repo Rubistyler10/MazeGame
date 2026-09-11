@@ -1,6 +1,3 @@
-using System;
-using UnityEngine;
-
 public class Observation
 {
     int row = 0;
@@ -30,12 +27,10 @@ public class Observation
     {
         if (maze.IsWall(new_row, new_col))
         {
-            Debug.Log("[OBSERVATION][INVALID] Tried to move into a wall, ignoring action");
             return;
         }
         else if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols)
         {
-            Debug.Log("[OBSERVATION][INVALID] Tried to move out of the maze, ignoring action");
             return;
         }
         else

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: 0_MazeAssetGenerator
   m_EditorClassIdentifier: Assembly-CSharp-Editor::MazeScriptAssetGenerator
   mazeScript: {fileID: 11500000, guid: e40a0c59a14923446a1bb909c96f78cb, type: 3}
-  outputFolder: Assets/Assets/Prefabs/Mazes
+  outputFolder: Assets/Prefabs/Mazes

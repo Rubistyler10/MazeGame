@@ -1,8 +1,6 @@
 using System.Collections;
-using UnityEngine;
 
-
-public class Game : MonoBehaviour
+public class Game 
 {
 
     private GameState gameState;
@@ -16,16 +14,13 @@ public class Game : MonoBehaviour
 
     public bool game_ended { get; private set; } = false;
 
-    private void Awake()
+    public void SetupGame(Maze maze, Player player, int budget, int max_iterations)
     {
+
         gameState = new GameState();
         forwardModel = new ForwardModel();
         travelled_path = new Queue();
-    }
 
-
-    public void SetupGame(Maze maze, Player player, int budget, int max_iterations)
-    {
         this.maze = maze;
         this.player = player;
         this.budget = budget;
