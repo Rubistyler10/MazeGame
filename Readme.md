@@ -69,3 +69,14 @@ The generator validates that the assigned script is a concrete class derived
 from `Maze`. Unity does not serialize multidimensional `int[,]` fields, so the
 base class stores a flattened serialized cell array while the C# layout remains
 the source of truth.
+
+## Players
+AI players use the same ScriptableObject workflow. Create a concrete class
+that inherits from `Player`, then create an asset generator with
+`Assets > Create > Players > Script Asset Generator`. Drag the C# player script
+into its `Player Script` field and click `Create Player Asset`. Assign the
+generated asset to the `Player` field on the `GameManager`.
+
+The visual `player_prefab` remains a separate scene object. It is only the
+rendered player model; the generated Player asset contains the decision-making
+logic. Override `Reset()` in stateful players when they need per-game cleanup.

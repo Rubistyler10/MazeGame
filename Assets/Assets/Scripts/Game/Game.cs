@@ -29,6 +29,7 @@ public class Game : MonoBehaviour
         this.maze = maze;
         this.player = player;
         this.budget = budget;
+        this.player.Reset();
         travelled_path.Clear();
         final_iteration_number = 0;
 
