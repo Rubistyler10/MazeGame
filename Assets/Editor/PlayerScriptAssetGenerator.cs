@@ -1,7 +1,13 @@
 using System;
 using UnityEditor;
 using UnityEngine;
-
+/* 
+    AI DISCLAIMER: 
+    The following code was generated with the assistance of an AI tool. 
+    While the AI provided a starting point, the final implementation was reviewed and modified by a human developer to ensure accuracy, functionality, and adherence to project requirements. 
+    The AI's contribution is acknowledged, but the responsibility for the code's correctness and suitability lies with the human developer.
+    This disclaimer is also written by Generative AI.
+*/
 [CreateAssetMenu(fileName = "PlayerScriptAssetGenerator", menuName = "Players/Script Asset Generator")]
 public class PlayerScriptAssetGenerator : ScriptableObject
 {
