@@ -4,18 +4,20 @@ using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     [Header("Game Settings")]
-    [SerializeField] private Maze maze;
-    [SerializeField] private Player player;
-    [SerializeField] private int budget = 100;
-    [SerializeField] private int max_iterations = 100;
+    public Maze maze;
+    public Player player;
+    public int budget = 100;
+    public int max_iterations = 100;
 
     [Header("Game Visualization Settings")]
-    [SerializeField] bool visualize_game = true;
-    [SerializeField] private bool auto_play = false;
+    [Tooltip("Should inputs affect the game? By default this is handled by MultiTester, turn on if testing a single GameManager")]
+    public bool allow_inputs = false;
+    public bool visualize_game = true;
+    public bool auto_play = false;
     // The speed at which the game auto-plays, in steps per second
-    [SerializeField] private float auto_play_speed = 1f;
-    [SerializeField] private bool allow_bump_animation = false;
-    [SerializeField] private float bump_animation_speed_multiplier = 1f;
+    public float auto_play_speed = 1f;
+    public bool allow_bump_animation = false;
+    public float bump_animation_speed_multiplier = 1f;
     private bool bump_return = false;
 
     [Header("GameWorld Assets")]
@@ -27,7 +29,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject wall_cell_prefab;
     [SerializeField] private GameObject goal_cell_prefab;
 
-
+    [Header("Game Information")]
+    public bool game_ended = false;
+    public int current_iteration_number = 0;
 
     private GameObject player_instance;
     private GameObject maze_parent;
@@ -36,15 +40,15 @@ public class GameManager : MonoBehaviour
     Vector3 previous_pos = Vector3.zero;
     Action player_action = null;
     Vector3 target_pos = Vector3.zero;
-    public bool game_ended = false;
-    private bool step_pressed = false;
+    [HideInInspector] public bool step_pressed = false;
     private GameObject player_dead_instance;
     private InputAction stepAction;
     private InputAction resetAction;
     private InputAction forceResetAction;
-    private InputAction autoPlayAction;
+    private InputAction toggleAutoPlayAction;
     private InputAction increaseSpeedAction;
     private InputAction decreaseSpeedAction;
+    private InputAction toggleBumpAnimationAction;
 
     private HumanPlayer_InputHandler input_handler;
 
@@ -56,9 +60,10 @@ public class GameManager : MonoBehaviour
         stepAction = InputSystem.actions.FindAction("Step");
         resetAction = InputSystem.actions.FindAction("Reset");
         forceResetAction = InputSystem.actions.FindAction("Force Reset");
-        autoPlayAction = InputSystem.actions.FindAction("Autoplay");
+        toggleAutoPlayAction = InputSystem.actions.FindAction("Toggle Autoplay");
         increaseSpeedAction = InputSystem.actions.FindAction("Increase Speed");
         decreaseSpeedAction = InputSystem.actions.FindAction("Decrease Speed");
+        toggleBumpAnimationAction = InputSystem.actions.FindAction("Toggle Bump Animation");
 
         if (player is HumanPlayer)
         {
@@ -133,45 +138,37 @@ public class GameManager : MonoBehaviour
             ResetGame();
         if(resetAction.WasPressedThisFrame() && game_ended)
             ResetGame();
-        if (autoPlayAction.WasPressedThisFrame())
+        if (toggleAutoPlayAction.WasPressedThisFrame())
             auto_play = !auto_play;
         if (increaseSpeedAction.WasPressedThisFrame())
             auto_play_speed += 0.5f;
         if (decreaseSpeedAction.WasPressedThisFrame())
             auto_play_speed = Mathf.Max(0.5f, auto_play_speed - 0.5f);
+        if (toggleBumpAnimationAction.WasPressedThisFrame())
+            allow_bump_animation = !allow_bump_animation;
         if (stepAction.IsPressed())
             step_pressed = true;
+        if (toggleBumpAnimationAction.WasPressedThisFrame())
+            allow_bump_animation = !allow_bump_animation;
 
     }
 
     void Update()
     {
-        InputHandling();
-
-        if (!visualize_game) {
-            gameScript.Step();
-            CheckForGameEnd(visualize_game);
-            return;
-        }
+        if (allow_inputs) InputHandling();
         
         if (game_ended) return;
-
-
         
         if (!is_animating)
         {
-
             if (CheckForGameEnd(visualize_game)) return;
-
 
             if (auto_play || step_pressed)
             {
                 // Step the game
                 StepGame();
                 step_pressed = false;
-                is_animating = true;
             }
-
         }
 
         if (is_animating)
@@ -190,13 +187,14 @@ public class GameManager : MonoBehaviour
             if (!visualize_game) return true;
             
             player_dead_instance = Instantiate(player_dead_prefab, player_instance.transform.position, Quaternion.identity);
+            player_dead_instance.transform.SetParent(this.transform.parent, false);
             player_instance.SetActive(false);
             return true;
         }
         else return false;
     }
 
-    void ResetGame()
+    public void ResetGame()
     {
         // Reset the game
         CreateGame();
@@ -205,7 +203,7 @@ public class GameManager : MonoBehaviour
         {
             // Only need to destroy the player to respawn, maze stays the same
             Destroy(player_instance); 
-            Destroy(player_dead_instance);
+            //Destroy(player_dead_instance); // MultiTester will handle destroying the player_dead_instance when it resets the game
             SpawnPlayerInstance(maze_parent);
             previous_pos = Vector3.zero;
             target_pos = Vector3.zero;
@@ -216,13 +214,31 @@ public class GameManager : MonoBehaviour
 
     void StepGame()
     {
+        current_iteration_number = gameScript.GetCurrentIterationNumber();
+
+        if(!visualize_game) StepGameNoAnimation();
+        else StepGameWithAnimation();
+    }
+
+    void StepGameWithAnimation()
+    {
         // Save the position of the player before stepping
         previous_pos = TranslatePositionToWorldCoordinates(gameScript.GetCurrentPosition()[0], gameScript.GetCurrentPosition()[1]);
         // Step the game and record the chosen action
         player_action = gameScript.Step();
         // Save the position of the player after stepping
         target_pos = TranslatePositionToWorldCoordinates(gameScript.GetCurrentPosition()[0], gameScript.GetCurrentPosition()[1]);
+        // Start animating
+        is_animating = true;
     }
+
+    void StepGameNoAnimation()
+    {
+        gameScript.Step();
+        CheckForGameEnd(visualize_game);
+    }
+
+    
 
     Vector3 TranslatePositionToWorldCoordinates(int row, int col)
     {

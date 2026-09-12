@@ -72,4 +72,9 @@ public class Game
     {
         return gameState.GetPosition();
     }
+
+    public int GetCurrentIterationNumber()
+    {
+        return gameState.iteration_number;
+    }
 }

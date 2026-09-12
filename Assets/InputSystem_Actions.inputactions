@@ -37,7 +37,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "Autoplay",
+                    "name": "Toggle Autoplay",
                     "type": "Button",
                     "id": "a0f4411c-a589-4036-bdf6-0b3e953c506b",
                     "expectedControlType": "",
@@ -60,6 +60,26 @@
                     "name": "Decrease Speed",
                     "type": "Button",
                     "id": "f48bc964-53c7-4e63-a011-8ac3d0c995dc",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Toggle Bump Animation",
+                    "type": "Button",
+                    "id": "5f1e894e-d342-4b5c-8ab6-7c028379f537",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Simulate Next Game",
+                    "type": "Button",
+                    "id": "4431f6df-2f65-46bf-95b3-5344782cc304",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -130,7 +150,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Autoplay",
+                    "action": "Toggle Autoplay",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -153,6 +173,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Decrease Speed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a5926819-8609-4ec2-a0c2-281496de6623",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Bump Animation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1dcbdee0-e8bc-470d-b4f6-5a6a28c18e21",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Simulate Next Game",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

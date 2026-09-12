@@ -1,3 +1,27 @@
+# Summary
+> This Summary has been written by Generative AI
+
+MazeGame is a Unity-based framework for simulating, testing, and visualizing maze-navigation games. A game consists of a maze, a player, a current game state, and a sequence of actions. The project separates these concepts so that the core simulation can remain mostly independent of Unity, while Unity provides convenient asset management, scene visualization, animation, and interactive controls.
+
+The simulation is organized around the following components:
+
+- **Maze** defines the playable grid, including its dimensions, walls, and traversable cells.
+- **Player** chooses actions based on an observation of the current state. Players may be human-controlled or implemented as reusable AI strategies.
+- **Action** represents a requested movement, currently one of the four cardinal directions.
+- **GameState** stores the authoritative state and validates updates such as player movement.
+- **Observation** provides a disposable copy of the state that players can inspect and use to test possible actions without changing the real game.
+- **ForwardModel** applies actions to either the real state or an observation.
+- **Game** coordinates setup, observation, action selection, state updates, terminal-state detection, and path recording.
+
+Within Unity, `GameManager` creates and visualizes an individual game. It can advance the simulation one step at a time, run it automatically, animate player movement, reset the game, and optionally show a wall-bump animation when an invalid move is attempted. `MultiTester` runs repeated combinations of configured players and mazes, making it possible to compare strategies across multiple trials without manually recreating each game.
+
+Mazes and AI players are stored as `ScriptableObject` assets. This allows configurations to be created, reused, and swapped directly in the Unity Editor. The project also supports human input through Unity's Input System, with configurable controls for stepping, resetting, autoplay, animation speed, and advancing through multi-game test runs.
+
+MazeGame is primarily intended for editor-based experimentation, debugging, and visualization rather than distribution as a standalone build. The Scene view and Unity Inspector are the main tools for configuring and observing simulations; in-game menus and a polished player-facing interface are not currently goals of the project.
+
+# AI DISCLAIMER
+Unless explicitly disclosed, all text in this Readme and all code has been written by a human, which is me. Direct any praise and criticism to the person behind the project. I take pride in doing my own work. Thank you. :D
+
 # TO DO
 - [x] Player base script
 - [x] Maze base script
@@ -7,10 +31,11 @@
     - **Idea**: After every step, record previous and current states of the board and chosen Action. This way an animation can be played even on invalid actions.
 - [x] HumanPlayer script using Unity inputs instead of console commands.
 - [x] Swap the hardcoded Spacebar input for Stepping the game for an Input System approach
-- [ ] Add list of players and mazes to GameManager for a [test_all] functionality.
+- [x] Implement a multi-instancer
+- [ ] Implement multiple concurrent visualizations for the multitester.
 - [x] Visualization has animation for bumping into a wall with a setting to make it optional
 - [ ] Implement Data Gathering into csv files
-- [ ] Finish Readme documentation
+- [x] Finish Readme documentation
 
 # C# Scripts
 ## Game
@@ -65,6 +90,7 @@ As in the original Python version, every [Maze] is its own script that inherits 
 All scripts have been ported to C# without any dependency for Unity, except for [Maze] and [Player], which need it for a comfortable swapping of different versions In-Editor.
 Even in those cases, the changes have been minor to allow the project to easily work without Unity. The reason for this approach is an intention of keeping the Maze Game as similar as possible to its original Python version, using Unity as simply a method to more comfortably visualize the events.
 
+This Unity project is intended to be used mostly in the `Scene` window and does not expect to ever be turned into a proper build. The tools made for testing and visualizing all live in the editor and In-Game tools or menus are not planned.
 
 ## GameManager
 _GameManager.cs_ is the tool for the creation of individual [Games], changing their initial settings within the editor, and creating Game World visualizations of said [Games].
@@ -81,15 +107,26 @@ The animation system also allows for an optional behaviour for the cases where t
 
 Inspector fields for the assets used has been added in case you want to change the art.
 
+## MultiTester
+_MultiTester.cs_ is the tool for running a battery of GameManagers. It is the equivalent of the original `main_all.py`.
+It receives a list of [Players] and [Mazes] and runs every [Player] on every [Maze] for a set number repetitions.
+
+By default, every [GameManager] instance is deleted on game end. This can be toggled on and off.
+By default, when a [Player] dies during repetitions on a [Maze], the ghost will stay visible. This can be toggled on and off.
+
+The implementation creates every new game when needed to avoid creating too many GameObjects at once. It does this by keeping count of the index of both [Player] and [Maze] lists, as well as the repetition number for the current pairing.
+
 ### Inputs
-[GameManager] also allows for inputs during gameplay to control the simulation, this inputs can be changed in the Input System Settings:
+[GameManager] and [MultiTester] also allow for inputs during gameplay to control the simulation, this inputs can be changed in the Input System Settings:
 - `Spacebar` steps the simulation.
 - `R` resets the simulation **only when the game has ended**
 - `Shift + R` force resets the simulation at any point
 - `A` toggles autoplay on and off
 - `+` increases the animation speed
 - `-` decreases the animation speed
-These inputs affect **all** [GameManager] instances.
+- `Enter` simulates the next game in [MultiTester] when the current one has ended. (Only if `auto_start_next_game_on_end` option is off).
+By default [GameManager] doesn't receive inputs as they should be handled by the [MultiTester], which will update the settings for both the current and all next [GameManager] instances.
+These inputs affect **all** [GameManager] instances in case there are several concurrent ones.
 
 
 ## Mazes
