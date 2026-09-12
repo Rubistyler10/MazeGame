@@ -404,7 +404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
       propertyPath: number_of_repetitions
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
