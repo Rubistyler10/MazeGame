@@ -22,6 +22,16 @@ MazeGame is primarily intended for editor-based experimentation, debugging, and 
 # AI DISCLAIMER
 Unless explicitly disclosed, all text in this Readme and all code has been written by a human, which is me. Direct any praise and criticism to the person behind the project. I take pride in doing my own work. Thank you. :D
 
+# Workflow
+To create new [Players] or [Mazes]: Check their respective sections in the _Readme_.
+
+To test several [Players] and [Mazes]:
+1. Add a [MultiTester] prefab to project hierarchy.
+    - 2 prefabs are already provided: one empty and one with [RandomPlayer] and all [Mazes].
+2. Fill any empty fields in the [MultiTester] with your desired data and adjust its settings to your preference.
+3. Press play in the editor.
+4. Use the keybinds or the options in the [MultiTester] inspector window to change any settings during the game.
+
 # TO DO
 - [x] Player base script
 - [x] Maze base script
