@@ -46,6 +46,7 @@ public class Game
         Action player_action = player.Think(observation, budget);
         if (player_action == null)
         {
+            if (player is HumanPlayer) return null;
             throw new System.Exception("Player returned null action");
         }
         else

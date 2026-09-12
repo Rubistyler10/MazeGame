@@ -9,4 +9,9 @@ public class RandomPlayer : Player
         Debug.Log("[PLAYER][RANDOMPLAYER] RandomPlayer chose action: " + chosen_action.ToString());
         return chosen_action;
     }
+
+    public override string ToString()
+    {
+        return "RandomPlayer";
+    }
 }

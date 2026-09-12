@@ -36,7 +36,8 @@ public class GameManager : MonoBehaviour
     Vector3 previous_pos = Vector3.zero;
     Action player_action = null;
     Vector3 target_pos = Vector3.zero;
-    private bool game_ended = false;
+    public bool game_ended = false;
+    private bool step_pressed = false;
     private GameObject player_dead_instance;
     private InputAction stepAction;
     private InputAction resetAction;
@@ -44,6 +45,8 @@ public class GameManager : MonoBehaviour
     private InputAction autoPlayAction;
     private InputAction increaseSpeedAction;
     private InputAction decreaseSpeedAction;
+
+    private HumanPlayer_InputHandler input_handler;
 
     void Start()
     {
@@ -56,6 +59,14 @@ public class GameManager : MonoBehaviour
         autoPlayAction = InputSystem.actions.FindAction("Autoplay");
         increaseSpeedAction = InputSystem.actions.FindAction("Increase Speed");
         decreaseSpeedAction = InputSystem.actions.FindAction("Decrease Speed");
+
+        if (player is HumanPlayer)
+        {
+            // Add a new input handler script to GameManager
+            input_handler = gameObject.AddComponent<HumanPlayer_InputHandler>();
+            input_handler.enabled = true;
+            input_handler.humanPlayer = (HumanPlayer)player;
+        }
     }
 
     void CreateGame()
@@ -116,54 +127,48 @@ public class GameManager : MonoBehaviour
         player_instance.transform.SetParent(maze_parent.transform, false);
     }
 
-    void Update()
+    void InputHandling()
     {
         if(forceResetAction.WasPressedThisFrame())
-        {
             ResetGame();
-        }
         if(resetAction.WasPressedThisFrame() && game_ended)
-        {
             ResetGame();
+        if (autoPlayAction.WasPressedThisFrame())
+            auto_play = !auto_play;
+        if (increaseSpeedAction.WasPressedThisFrame())
+            auto_play_speed += 0.5f;
+        if (decreaseSpeedAction.WasPressedThisFrame())
+            auto_play_speed = Mathf.Max(0.5f, auto_play_speed - 0.5f);
+        if (stepAction.IsPressed())
+            step_pressed = true;
+
+    }
+
+    void Update()
+    {
+        InputHandling();
+
+        if (!visualize_game) {
+            gameScript.Step();
+            CheckForGameEnd(visualize_game);
+            return;
         }
         
         if (game_ended) return;
 
-        if (!visualize_game) gameScript.Step();
 
-        bool step_pressed = stepAction.IsPressed();
-
-        if (autoPlayAction.WasPressedThisFrame())
-        {
-            auto_play = !auto_play;
-        }
-
-        if (increaseSpeedAction.WasPressedThisFrame())
-        {
-            auto_play_speed += 0.5f;
-        }
-        if (decreaseSpeedAction.WasPressedThisFrame())
-        {
-            auto_play_speed = Mathf.Max(0.5f, auto_play_speed - 0.5f);
-        }
-
-
+        
         if (!is_animating)
         {
 
-            if (gameScript.game_ended && !game_ended)
-            {
-                game_ended = true;
-                player_dead_instance = Instantiate(player_dead_prefab, player_instance.transform.position, Quaternion.identity);
-                player_instance.SetActive(false);
-                return;
-            }
+            if (CheckForGameEnd(visualize_game)) return;
 
 
             if (auto_play || step_pressed)
             {
                 // Step the game
                 StepGame();
+                step_pressed = false;
                 is_animating = true;
             }
 
@@ -177,10 +182,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    bool CheckForGameEnd(bool visualize_game)
+    {
+        if (gameScript.game_ended && !game_ended)
+        {
+            game_ended = true;
+            if (!visualize_game) return true;
+            
+            player_dead_instance = Instantiate(player_dead_prefab, player_instance.transform.position, Quaternion.identity);
+            player_instance.SetActive(false);
+            return true;
+        }
+        else return false;
+    }
+
     void ResetGame()
     {
         // Reset the game
         CreateGame();
+        game_ended = false;
         if (visualize_game)
         {
             // Only need to destroy the player to respawn, maze stays the same
@@ -191,7 +211,6 @@ public class GameManager : MonoBehaviour
             target_pos = Vector3.zero;
             player_action = null;
             is_animating = false;
-            game_ended = false;
         }
     }
 

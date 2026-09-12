@@ -5,7 +5,7 @@
 - [x] Implement Game visualization and Management
     - GameManager must be a GameObject in the scene that is tasked with creating [Game] objects and the rest of dependencies, assign them a chosen [Maze] and [Player] and spawn a visualization of them in the game world.
     - **Idea**: After every step, record previous and current states of the board and chosen Action. This way an animation can be played even on invalid actions.
-- [ ] HumanPlayer script using Unity inputs instead of console commands.
+- [x] HumanPlayer script using Unity inputs instead of console commands.
 - [x] Swap the hardcoded Spacebar input for Stepping the game for an Input System approach
 - [ ] Add list of players and mazes to GameManager for a [test_all] functionality.
 - [x] Visualization has animation for bumping into a wall with a setting to make it optional
@@ -30,6 +30,7 @@ The flow is:
 7. If it is, record the iteration counter in case it's wanted later.
 
 Step() returns the action chosen by the player for use in the Unity side of things.
+> A special case has been allowed for a HumanPlayer. In Python, the simulation could be paused while waiting for a player action thanks to input(), but in Unity, we need Update() to keep running while checking for inputs. [Game] allows for a null action **only if the player is HumanPlayer**, which would make the character stay in place, without altering the [GameState], until the [Player] inputs an [Action].
 
 ## Game State
 _GameState.cs_ contains the **true, real** state of the game. The [Game State] is what is actually happening.
@@ -86,6 +87,8 @@ Inspector fields for the assets used has been added in case you want to change t
 - `R` resets the simulation **only when the game has ended**
 - `Shift + R` force resets the simulation at any point
 - `A` toggles autoplay on and off
+- `+` increases the animation speed
+- `-` decreases the animation speed
 These inputs affect **all** [GameManager] instances.
 
 

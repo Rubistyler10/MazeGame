@@ -166,55 +166,87 @@
                     "name": "MovementAxis",
                     "type": "Value",
                     "id": "160ff2d9-374f-4a4b-bb26-1584a7f7857c",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "f216339f-f826-471c-b940-9673ba28a913",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
                     "priority": 0
                 }
             ],
             "bindings": [
                 {
-                    "name": "",
-                    "id": "757890ee-427d-431b-ae69-3da83c686d95",
+                    "name": "2D Vector",
+                    "id": "4ea61bc3-6390-4ced-8281-0cc3b2465f56",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MovementAxis",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "e77a15ed-5038-42f6-ab63-3c95ccd96b92",
                     "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "MovementAxis",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "efcfd35b-8dfd-4fb4-a59e-e83f3d0a6786",
+                    "name": "down",
+                    "id": "b994aa0b-36c6-4872-af48-a6add976a708",
                     "path": "<Keyboard>/downArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "MovementAxis",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "d082b118-8fd1-4c77-8972-e1b64040e101",
+                    "name": "left",
+                    "id": "bdced6e1-cfda-413f-b96d-af3434acb868",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "MovementAxis",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "9eb08fdc-418f-447a-8372-d428c96f4c6f",
+                    "name": "right",
+                    "id": "17b632dc-0a10-471b-834f-cb537bde43f6",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "MovementAxis",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "69f68332-da70-4ced-9b64-a6ab32fe7f6e",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
