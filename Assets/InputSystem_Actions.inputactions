@@ -77,7 +77,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "Simulate Next Game",
+                    "name": "Start Next Game",
                     "type": "Button",
                     "id": "4431f6df-2f65-46bf-95b3-5344782cc304",
                     "expectedControlType": "",
@@ -194,7 +194,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Simulate Next Game",
+                    "action": "Start Next Game",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -45,6 +45,7 @@ To test several [Players] and [Mazes]:
 - [ ] Implement multiple concurrent visualizations for the multitester.
 - [x] Visualization has animation for bumping into a wall with a setting to make it optional
 - [ ] Implement Data Gathering into csv files
+- [ ] Implement instant player movement to visualization
 - [x] Finish Readme documentation
 
 # C# Scripts

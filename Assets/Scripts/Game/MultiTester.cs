@@ -119,7 +119,7 @@ public class MultiTester : MonoBehaviour
                         player_index++;
                         if (player_index >= player_list.Length)
                         {
-                            Debug.Log("All games have been tested");
+                            Debug.Log("[MultiTester][TESTEND] All games have been tested");
                             current_game_simulation = null;
                             return;
                         }
@@ -128,12 +128,6 @@ public class MultiTester : MonoBehaviour
             }
             SimulateGame();
         }
-        else
-        {
-            Debug.Log("All games have been tested");
-            current_game_simulation = null;
-        }
-
     }
 
 
@@ -187,6 +181,8 @@ public class MultiTester : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(current_game_simulation == null) return;
+
         InputHandling();
 
         if (current_game_simulation.game_ended)
