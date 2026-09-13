@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MultiTester : MonoBehaviour
+public class MultiTester : GameSimulator
 {
     // TO DO: Implement multiple visualizations at once
 
@@ -26,12 +26,16 @@ public class MultiTester : MonoBehaviour
 
     [Header("Game Visualization Settings")]
     [SerializeField] private bool visualize_game = true;
-    [Tooltip("Should the tester spawn several game visualizations at once in the Game World or only one at a time?")]
+    // [Tooltip("Should the tester spawn several game visualizations at once in the Game World or only one at a time?")]
     // [SerializeField] private bool visualize_one_at_a_time = true; // Potential future feature, not implemented yet
+    [Tooltip("Should the game auto-play without user input? If true, the game will step automatically as soon as the previous step animation is complete.")]
     [SerializeField] private bool auto_play = false;
     // The speed at which the game auto-plays, in steps per second
+    [Tooltip("The speed at which the game auto-plays, in steps per second.")]
     [SerializeField] private float auto_play_speed = 1f;
+    [Tooltip("Should the game allow bump animations when the player tries to move into a wall? If true, the player will move slightly into the wall and then return to their original position (For flair only).")]
     [SerializeField] private bool allow_bump_animation = false;
+    [Tooltip("The speed multiplier for the bump animation. A value of 1 means the bump animation will take the same amount of time as a normal step. A value of 2 means the bump animation will take half the time of a normal step.")]
     [SerializeField] private float bump_animation_speed_multiplier = 1f;
 
     private GameManager current_game_simulation = null;
@@ -41,32 +45,29 @@ public class MultiTester : MonoBehaviour
     private int total_game_simulations = 0;
     private int game_simulation_count = 0;
     private bool start_next_game = false;
-
-    private InputAction stepAction;
-    private InputAction resetAction;
-    private InputAction forceResetAction;
-    private InputAction toggleAutoPlayAction;
-    private InputAction increaseSpeedAction;
-    private InputAction decreaseSpeedAction;
-    private InputAction toggleBumpAnimationAction;
-    private InputAction startNextGameAction;
+    private InputHandler input_handler;
     private GameObject repetition_set_parent;
+
+    const float CHANGE_SPEED_AMOUNT = 1f;
+    const float STRONG_CHANGE_SPEED_AMOUNT = 2f;
+    const float MIN_AUTO_PLAY_SPEED = 1f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        stepAction = InputSystem.actions.FindAction("Step");
-        resetAction = InputSystem.actions.FindAction("Reset");
-        forceResetAction = InputSystem.actions.FindAction("Force Reset");
-        toggleAutoPlayAction = InputSystem.actions.FindAction("Toggle Autoplay");
-        increaseSpeedAction = InputSystem.actions.FindAction("Increase Speed");
-        decreaseSpeedAction = InputSystem.actions.FindAction("Decrease Speed");
-        toggleBumpAnimationAction = InputSystem.actions.FindAction("Toggle Bump Animation");
-        startNextGameAction = InputSystem.actions.FindAction("Start Next Game");
+        SetUpInputHandler();
         SetUpMultiTester();
     }
 
+    void SetUpInputHandler()
+    {
+        if (input_handler == null)
+        {
+            input_handler = this.gameObject.AddComponent<InputHandler>();
+            input_handler.SetInputReceiver(this);
+        }
+    }
 
     void SetUpMultiTester()
     {
@@ -145,45 +146,72 @@ public class MultiTester : MonoBehaviour
         game_manager.allow_inputs = false;
     }
 
-
-    void InputHandling()
+    // Input Handling
+    public override void ResetGameInputPress()
     {
-        if (forceResetAction.WasPressedThisFrame())
-            current_game_simulation.ResetGame();
-        if(resetAction.WasPressedThisFrame() && current_game_simulation.game_ended)
-            current_game_simulation.ResetGame();
-        if (toggleAutoPlayAction.WasPressedThisFrame())
-        {
-            auto_play = !auto_play;
-            current_game_simulation.auto_play = auto_play;
-        }
-        if (increaseSpeedAction.WasPressedThisFrame())
-        {
-            auto_play_speed += 0.5f;
-            current_game_simulation.auto_play_speed = auto_play_speed;
-        }
-        if (decreaseSpeedAction.WasPressedThisFrame())
-        {
-            auto_play_speed = Mathf.Max(0.5f, auto_play_speed - 0.5f);
-            current_game_simulation.auto_play_speed = auto_play_speed;
-        }
-        if (stepAction.WasPressedThisFrame())
-            current_game_simulation.step_pressed = true;
-        if (toggleBumpAnimationAction.WasPressedThisFrame()){
-            allow_bump_animation = !allow_bump_animation;
-            current_game_simulation.allow_bump_animation = allow_bump_animation;
-        }
-        if (startNextGameAction.WasPressedThisFrame())
-            start_next_game = true;
-
+        if (current_game_simulation != null)
+            current_game_simulation.ResetGame(force_reset: false);
     }
+    public override void ForceResetGameInputPress()
+    {
+        if (current_game_simulation != null)
+            current_game_simulation.ResetGame(force_reset: true);
+    }
+    public override void ToggleAutoPlayInputPress()
+    {
+        auto_play = !auto_play;
+        if (current_game_simulation != null)
+            current_game_simulation.ToggleAutoPlay();
+    }
+    public override void IncreaseAutoPlaySpeedInputPress()
+    {
+        if (current_game_simulation != null)
+            ChangeAutoPlaySpeed(CHANGE_SPEED_AMOUNT);
+    }
+    public override void StrongIncreaseAutoPlaySpeedInputPress()
+    {
+        if (current_game_simulation != null)
+            ChangeAutoPlaySpeed(STRONG_CHANGE_SPEED_AMOUNT);
+    }
+    public override void DecreaseAutoPlaySpeedInputPress()
+    {
+        if (current_game_simulation != null)
+            ChangeAutoPlaySpeed(-CHANGE_SPEED_AMOUNT);
+    }
+    public override void StrongDecreaseAutoPlaySpeedInputPress()
+    {
+        if (current_game_simulation != null)
+            ChangeAutoPlaySpeed(-STRONG_CHANGE_SPEED_AMOUNT);
+    }
+    public override void StepGameInputPress()
+    {
+        if (current_game_simulation != null)
+            current_game_simulation.step_pressed = true;
+    }
+    public override void ToggleBumpAnimationInputPress()
+    {
+        allow_bump_animation = !allow_bump_animation;
+        if (current_game_simulation != null)
+            current_game_simulation.allow_bump_animation = allow_bump_animation;
+    }
+    public override void StartNextGameInputPress()
+    {
+        start_next_game = true;
+    }
+    void ChangeAutoPlaySpeed(float delta)
+    {
+        auto_play_speed = Mathf.Max(MIN_AUTO_PLAY_SPEED, auto_play_speed + delta);
+        if (current_game_simulation != null)
+            current_game_simulation.ChangeAutoPlaySpeed(auto_play_speed);
+    }
+
 
     // Update is called once per frame
     void Update()
     {
         if(current_game_simulation == null) return;
 
-        InputHandling();
+        //InputHandling();
 
         if (current_game_simulation.game_ended)
         {

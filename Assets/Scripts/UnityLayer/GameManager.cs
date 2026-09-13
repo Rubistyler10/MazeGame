@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class GameManager : MonoBehaviour
+public class GameManager : GameSimulator
 {
     [Header("Game Settings")]
     public Maze maze;
@@ -12,11 +12,15 @@ public class GameManager : MonoBehaviour
     [Header("Game Visualization Settings")]
     [Tooltip("Should inputs affect the game? By default this is handled by MultiTester, turn on if testing a single GameManager")]
     public bool allow_inputs = false;
+    [Tooltip("Should the game be visualized in the Game World? If false, the game will run in the background without any visualization.")]
     public bool visualize_game = true;
+    [Tooltip("Should the game auto-play without user input? If true, the game will step automatically as soon as the previous step animation is complete.")]
     public bool auto_play = false;
-    // The speed at which the game auto-plays, in steps per second
+    [Tooltip("The speed at which the game auto-plays, in steps per second.")]
     public float auto_play_speed = 1f;
+    [Tooltip("Should the game allow bump animations when the player tries to move into a wall? If true, the player will move slightly into the wall and then return to their original position (For flair only).")]
     public bool allow_bump_animation = false;
+    [Tooltip("The speed multiplier for the bump animation. A value of 1 means the bump animation will take the same amount of time as a normal step. A value of 2 means the bump animation will take half the time of a normal step.")]
     public float bump_animation_speed_multiplier = 1f;
     private bool bump_return = false;
 
@@ -42,34 +46,34 @@ public class GameManager : MonoBehaviour
     Vector3 target_pos = Vector3.zero;
     [HideInInspector] public bool step_pressed = false;
     private GameObject player_dead_instance;
-    private InputAction stepAction;
-    private InputAction resetAction;
-    private InputAction forceResetAction;
-    private InputAction toggleAutoPlayAction;
-    private InputAction increaseSpeedAction;
-    private InputAction decreaseSpeedAction;
-    private InputAction toggleBumpAnimationAction;
-
     private HumanPlayer_InputHandler input_handler;
+    const float CHANGE_SPEED_AMOUNT = 1f;
+    const float STRONG_CHANGE_SPEED_AMOUNT = 2f;
+    const float MIN_AUTO_PLAY_SPEED = 1f;
 
     void Start()
     {
+        if (allow_inputs)
+            SetUpInputHandler();
+
         CreateGame();
         // Spawn the game world representation of the game
         if (visualize_game) SpawnGameWorld();
-        stepAction = InputSystem.actions.FindAction("Step");
-        resetAction = InputSystem.actions.FindAction("Reset");
-        forceResetAction = InputSystem.actions.FindAction("Force Reset");
-        toggleAutoPlayAction = InputSystem.actions.FindAction("Toggle Autoplay");
-        increaseSpeedAction = InputSystem.actions.FindAction("Increase Speed");
-        decreaseSpeedAction = InputSystem.actions.FindAction("Decrease Speed");
-        toggleBumpAnimationAction = InputSystem.actions.FindAction("Toggle Bump Animation");
 
         if (player is HumanPlayer)
         {
             // Add a new input handler script to GameManager
             input_handler = gameObject.AddComponent<HumanPlayer_InputHandler>();
             input_handler.enabled = true;
+            input_handler.humanPlayer = (HumanPlayer)player;
+        }
+    }
+
+    void SetUpInputHandler()
+    {
+        if (input_handler == null)
+        {
+            input_handler = this.gameObject.AddComponent<HumanPlayer_InputHandler>();
             input_handler.humanPlayer = (HumanPlayer)player;
         }
     }
@@ -132,31 +136,64 @@ public class GameManager : MonoBehaviour
         player_instance.transform.SetParent(maze_parent.transform, false);
     }
 
-    void InputHandling()
+    // Input Handling
+    public override void ResetGameInputPress()
     {
-        if(forceResetAction.WasPressedThisFrame())
-            ResetGame();
-        if(resetAction.WasPressedThisFrame() && game_ended)
-            ResetGame();
-        if (toggleAutoPlayAction.WasPressedThisFrame())
-            auto_play = !auto_play;
-        if (increaseSpeedAction.WasPressedThisFrame())
-            auto_play_speed += 0.5f;
-        if (decreaseSpeedAction.WasPressedThisFrame())
-            auto_play_speed = Mathf.Max(0.5f, auto_play_speed - 0.5f);
-        if (toggleBumpAnimationAction.WasPressedThisFrame())
-            allow_bump_animation = !allow_bump_animation;
-        if (stepAction.IsPressed())
-            step_pressed = true;
-        if (toggleBumpAnimationAction.WasPressedThisFrame())
-            allow_bump_animation = !allow_bump_animation;
-
+        ResetGame(force_reset: false);
+    }
+    public override void ForceResetGameInputPress()
+    {
+        ResetGame(force_reset: true);
+    }
+    public override void ToggleAutoPlayInputPress()
+    {
+        ToggleAutoPlay();
+    }
+    public override void IncreaseAutoPlaySpeedInputPress()
+    {
+        ChangeAutoPlaySpeed(auto_play_speed + CHANGE_SPEED_AMOUNT);
+    }
+    public override void StrongIncreaseAutoPlaySpeedInputPress()
+    {
+        ChangeAutoPlaySpeed(auto_play_speed + STRONG_CHANGE_SPEED_AMOUNT);
+    }
+    public override void DecreaseAutoPlaySpeedInputPress()
+    {
+        ChangeAutoPlaySpeed(auto_play_speed - CHANGE_SPEED_AMOUNT);
+    }
+    public override void StrongDecreaseAutoPlaySpeedInputPress()
+    {
+        ChangeAutoPlaySpeed(auto_play_speed - STRONG_CHANGE_SPEED_AMOUNT);
+    }
+    public override void StepGameInputPress()
+    {
+        ActivateStepPressed();
+    }
+    public override void ToggleBumpAnimationInputPress()
+    {
+        ToggleBumpAnimation();
     }
 
-    void Update()
+    public void ToggleAutoPlay()
     {
-        if (allow_inputs) InputHandling();
-        
+        auto_play = !auto_play;
+    }
+    public void ChangeAutoPlaySpeed(float new_speed)
+    {
+        auto_play_speed = Mathf.Max(MIN_AUTO_PLAY_SPEED, new_speed);
+    }
+    public void ActivateStepPressed()
+    {
+        step_pressed = true;
+    }
+    public void ToggleBumpAnimation()
+    {
+        allow_bump_animation = !allow_bump_animation;
+    }
+
+
+    void Update()
+    {   
         if (game_ended) return;
         
         if (!is_animating)
@@ -194,8 +231,10 @@ public class GameManager : MonoBehaviour
         else return false;
     }
 
-    public void ResetGame()
+    public void ResetGame(bool force_reset)
     {
+        if (!force_reset && !game_ended) return;
+
         // Reset the game
         CreateGame();
         game_ended = false;

@@ -133,11 +133,17 @@ The implementation creates every new game when needed to avoid creating too many
 - `R` resets the simulation **only when the game has ended**
 - `Shift + R` force resets the simulation at any point
 - `A` toggles autoplay on and off
-- `+` increases the animation speed
-- `-` decreases the animation speed
+- `[+]` increases the animation speed
+- `Shift + [+]` increases the animation speed by a bigger step
+- `[-]` decreases the animation speed
+- `Shift + [-]` decreases the animation speed by a bigger step
 - `Enter` simulates the next game in [MultiTester] when the current one has ended. (Only if `auto_start_next_game_on_end` option is off).
 By default [GameManager] doesn't receive inputs as they should be handled by the [MultiTester], which will update the settings for both the current and all next [GameManager] instances.
 These inputs affect **all** [GameManager] instances in case there are several concurrent ones.
+
+Both [GameManager] and [MultiTester] inherit from the base class _GameSimulator.cs_, to ensure their input result methods are callable by the handler.
+Inputs are handled by _InputHandler.cs_, which has to be set up to know which script it need to call to apply the input.
+> Originally [GameManager] and [MultiTester] didn't inherit from [GameSimulator] and [InputHandler] didn't exist, making each of them to have their own input checks and calls. This has been changed to reduce duplicate code and create a clearer call hierarchy.
 
 
 ## Mazes
