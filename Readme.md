@@ -32,6 +32,12 @@ To test several [Players] and [Mazes]:
 3. Press play in the editor.
 4. Use the keybinds or the options in the [MultiTester] inspector window to change any settings during the game.
 
+To test a single pairing of [Player] and [Maze]:
+1. Add a [GameManager] prefab to project hierarchy.
+2. Fill any empty fields in the [GameManager] with your desired data and adjust its settings to your preference.
+3. 3. Press play in the editor.
+4. Use the keybinds or the options in the [MultiTester] inspector window to change any settings during the game.
+
 # TO DO
 - [x] Player base script
 - [x] Maze base script
