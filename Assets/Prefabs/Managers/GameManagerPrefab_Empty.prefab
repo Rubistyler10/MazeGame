@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6540783881956069786
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7496437108214527308}
+  - component: {fileID: 8241501832984458960}
+  m_Layer: 0
+  m_Name: GameManagerPrefab_Empty
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7496437108214527308
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540783881956069786}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8241501832984458960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6540783881956069786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d1d0291782522943b56d02566378038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  maze: {fileID: 0}
+  player: {fileID: 0}
+  budget: 100
+  max_iterations: 100
+  allow_inputs: 0
+  visualize_game: 1
+  auto_play: 0
+  auto_play_speed: 1
+  allow_bump_animation: 0
+  bump_animation_speed_multiplier: 1
+  player_prefab: {fileID: 848359483221634351, guid: d91413bb4bb2da74182219a4437f0996, type: 3}
+  player_dead_prefab: {fileID: 848359483221634351, guid: 4dd2e10f0de959840b144232fb613a93, type: 3}
+  empty_cell_prefab: {fileID: 142590281981850935, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}
+  start_cell_prefab: {fileID: 798460826592014407, guid: b23b45dc88fff9842bf9c3a407ba46c3, type: 3}
+  hole_cell_prefab: {fileID: 1812159235079957068, guid: 511fc2e693032154885eadeac80a025a, type: 3}
+  wall_cell_prefab: {fileID: 5148925136067254975, guid: 759cda0da40f28c4a90e15dc9c756bde, type: 3}
+  goal_cell_prefab: {fileID: 1491916295773960168, guid: e4f7d1407f4fa5a4fa0ebab218f3cb92, type: 3}
+  game_ended: 0
+  current_iteration_number: 0
+  step_pressed: 0

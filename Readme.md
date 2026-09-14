@@ -35,6 +35,7 @@ To test several [Players] and [Mazes]:
 To test a single pairing of [Player] and [Maze]:
 1. Add a [GameManager] prefab to project hierarchy.
 2. Fill any empty fields in the [GameManager] with your desired data and adjust its settings to your preference.
+    - Remember to set `Standalone` in `Game Visualization Settings` to true for inputs and [HumanPlayer] to work.
 3. 3. Press play in the editor.
 4. Use the keybinds or the options in the [MultiTester] inspector window to change any settings during the game.
 
@@ -51,12 +52,11 @@ To test a single pairing of [Player] and [Maze]:
 - [ ] Implement multiple concurrent visualizations for the multitester.
 - [x] Visualization has animation for bumping into a wall with a setting to make it optional
 - [ ] Implement Data Gathering into csv files
-- [ ] Implement instant player movement to visualization
 - [x] Finish Readme documentation
 
 ## Bugs
-- [ ] Dead Player instance spawns wrong.
-- [ ] Fix HumanPlayer 
+- [x] Dead Player instance spawns wrong.
+- [x] Fix HumanPlayer 
 
 # C# Scripts
 ## Game

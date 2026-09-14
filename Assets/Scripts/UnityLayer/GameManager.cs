@@ -10,8 +10,8 @@ public class GameManager : GameSimulator
     public int max_iterations = 100;
 
     [Header("Game Visualization Settings")]
-    [Tooltip("Should inputs affect the game? By default this is handled by MultiTester, turn on if testing a single GameManager")]
-    public bool allow_inputs = false;
+    [Tooltip("Is this GameManager running without a MultiTester? If true, the GameManager will handle input and visualization. If false, the MultiTester will handle input and visualization.")]
+    public bool is_standalone = false;
     [Tooltip("Should the game be visualized in the Game World? If false, the game will run in the background without any visualization.")]
     public bool visualize_game = true;
     [Tooltip("Should the game auto-play without user input? If true, the game will step automatically as soon as the previous step animation is complete.")]
@@ -46,35 +46,40 @@ public class GameManager : GameSimulator
     Vector3 target_pos = Vector3.zero;
     [HideInInspector] public bool step_pressed = false;
     private GameObject player_dead_instance;
-    private HumanPlayer_InputHandler input_handler;
+    private InputHandler inputHandler;
+    private HumanPlayer_InputHandler humanPlayer_inputHandler;
     const float CHANGE_SPEED_AMOUNT = 1f;
     const float STRONG_CHANGE_SPEED_AMOUNT = 2f;
     const float MIN_AUTO_PLAY_SPEED = 1f;
 
     void Start()
     {
-        if (allow_inputs)
-            SetUpInputHandler();
+        if (is_standalone) SetUpInputHandler();
 
+        // Create the underlying game
         CreateGame();
         // Spawn the game world representation of the game
         if (visualize_game) SpawnGameWorld();
 
-        if (player is HumanPlayer)
-        {
-            // Add a new input handler script to GameManager
-            input_handler = gameObject.AddComponent<HumanPlayer_InputHandler>();
-            input_handler.enabled = true;
-            input_handler.humanPlayer = (HumanPlayer)player;
-        }
+        SetUpHumanPlayerInputHandler();
     }
 
     void SetUpInputHandler()
     {
-        if (input_handler == null)
+        if (inputHandler == null)
         {
-            input_handler = this.gameObject.AddComponent<HumanPlayer_InputHandler>();
-            input_handler.humanPlayer = (HumanPlayer)player;
+            inputHandler = this.gameObject.AddComponent<InputHandler>();
+            inputHandler.SetInputReceiver(this);
+        }
+    }
+        
+    void SetUpHumanPlayerInputHandler()
+    {
+        if (player is HumanPlayer)
+        {
+            humanPlayer_inputHandler = this.gameObject.AddComponent<HumanPlayer_InputHandler>();
+            humanPlayer_inputHandler.enabled = true;
+            humanPlayer_inputHandler.humanPlayer = (HumanPlayer)player;
         }
     }
 
@@ -224,7 +229,10 @@ public class GameManager : GameSimulator
             if (!visualize_game) return true;
             
             player_dead_instance = Instantiate(player_dead_prefab, player_instance.transform.localPosition, Quaternion.identity);
-            player_dead_instance.transform.SetParent(this.transform.parent, false);
+
+            if (is_standalone) player_dead_instance.transform.SetParent(this.transform, false);
+            else player_dead_instance.transform.SetParent(this.transform.parent, false);
+
             player_instance.SetActive(false);
             return true;
         }
@@ -295,7 +303,7 @@ public class GameManager : GameSimulator
 
     void MovePlayerInstance_BumpEnabled()
     {
-        if (previous_pos == target_pos)
+        if (previous_pos == target_pos && player_action != null)
         {
             Vector3 halfway_pos;
             if (player_action.IsUp())

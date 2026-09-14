@@ -143,7 +143,7 @@ public class MultiTester : GameSimulator
         game_manager.auto_play_speed = auto_play_speed;
         game_manager.allow_bump_animation = allow_bump_animation;
         game_manager.bump_animation_speed_multiplier = bump_animation_speed_multiplier;
-        game_manager.allow_inputs = false;
+        game_manager.is_standalone = false;
     }
 
     // Input Handling

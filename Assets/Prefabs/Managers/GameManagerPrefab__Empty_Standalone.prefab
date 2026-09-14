@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7496437108214527308}
   - component: {fileID: 8241501832984458960}
   m_Layer: 0
-  m_Name: GameManagerPrefab
+  m_Name: GameManagerPrefab__Empty_Standalone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,11 +48,12 @@ MonoBehaviour:
   player: {fileID: 0}
   budget: 100
   max_iterations: 100
+  is_standalone: 1
   visualize_game: 1
-  auto_play: 0
-  auto_play_speed: 1
-  allow_bump_animation: 0
-  bump_animation_speed_multiplier: 1
+  auto_play: 1
+  auto_play_speed: 4
+  allow_bump_animation: 1
+  bump_animation_speed_multiplier: 1.5
   player_prefab: {fileID: 848359483221634351, guid: d91413bb4bb2da74182219a4437f0996, type: 3}
   player_dead_prefab: {fileID: 848359483221634351, guid: 4dd2e10f0de959840b144232fb613a93, type: 3}
   empty_cell_prefab: {fileID: 142590281981850935, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}
@@ -61,3 +62,5 @@ MonoBehaviour:
   wall_cell_prefab: {fileID: 5148925136067254975, guid: 759cda0da40f28c4a90e15dc9c756bde, type: 3}
   goal_cell_prefab: {fileID: 1491916295773960168, guid: e4f7d1407f4fa5a4fa0ebab218f3cb92, type: 3}
   game_ended: 0
+  current_iteration_number: 0
+  step_pressed: 0

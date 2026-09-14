@@ -14,9 +14,14 @@ public class HumanPlayer_InputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (moveAction.WasPressedThisFrame())
+        if (moveAction.IsPressed())
         {
             move_input = moveAction.ReadValue<Vector2>();
+            humanPlayer.move_input = move_input;
+        }
+        if (moveAction.WasReleasedThisFrame())
+        {
+            move_input = Vector2.zero;
             humanPlayer.move_input = move_input;
         }
     }
