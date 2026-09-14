@@ -223,7 +223,7 @@ public class GameManager : GameSimulator
             game_ended = true;
             if (!visualize_game) return true;
             
-            player_dead_instance = Instantiate(player_dead_prefab, player_instance.transform.position, Quaternion.identity);
+            player_dead_instance = Instantiate(player_dead_prefab, player_instance.transform.localPosition, Quaternion.identity);
             player_dead_instance.transform.SetParent(this.transform.parent, false);
             player_instance.SetActive(false);
             return true;

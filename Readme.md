@@ -54,6 +54,10 @@ To test a single pairing of [Player] and [Maze]:
 - [ ] Implement instant player movement to visualization
 - [x] Finish Readme documentation
 
+## Bugs
+- [ ] Dead Player instance spawns wrong.
+- [ ] Fix HumanPlayer 
+
 # C# Scripts
 ## Game
 _Game.cs_ controls the main flow of the game itself. It tells the other scripts when to participate in Step().
