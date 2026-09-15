@@ -53,6 +53,7 @@ To test a single pairing of [Player] and [Maze]:
 - [x] Visualization has animation for bumping into a wall with a setting to make it optional
 - [ ] Implement Data Gathering into csv files
 - [x] Finish Readme documentation
+- [ ] Add a setter function to the game settings in multitester to allow real-time change of settings through inspector and not just keybinds
 
 ## Bugs
 - [x] Dead Player instance spawns wrong.
