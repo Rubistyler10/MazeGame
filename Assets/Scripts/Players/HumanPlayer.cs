@@ -1,12 +1,27 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class HumanPlayer : Player
 {
-    /*  
-        Input polling should be owned by GameManager, a separate MonoBehaviour, or replaced with an input callback.
-        The HumanPlayer should then consume the stored input from Think(). 
-    */
     public Vector2 move_input;    
+    InputAction moveAction;
+    private void OnEnable()
+    {
+        moveAction = InputSystem.actions.FindAction("MovementAxis");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (moveAction.IsPressed())
+        {
+            move_input = moveAction.ReadValue<Vector2>();
+        }
+        if (moveAction.WasReleasedThisFrame())
+        {
+            move_input = Vector2.zero;
+        }
+    }
 
     public override Action Think(Observation observation, int budget)
     {

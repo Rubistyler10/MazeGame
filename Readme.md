@@ -15,7 +15,7 @@ The simulation is organized around the following components:
 
 Within Unity, `GameManager` creates and visualizes an individual game. It can advance the simulation one step at a time, run it automatically, animate player movement, reset the game, and optionally show a wall-bump animation when an invalid move is attempted. `MultiTester` runs repeated combinations of configured players and mazes, making it possible to compare strategies across multiple trials without manually recreating each game.
 
-Mazes and AI players are stored as `ScriptableObject` assets. This allows configurations to be created, reused, and swapped directly in the Unity Editor. The project also supports human input through Unity's Input System, with configurable controls for stepping, resetting, autoplay, animation speed, and advancing through multi-game test runs.
+Mazes and are stored as `ScriptableObject` assets. This allows configurations to be created, reused, and swapped directly in the Unity Editor. The project also supports human input through Unity's Input System, with configurable controls for stepping, resetting, autoplay, animation speed, and advancing through multi-game test runs.
 
 MazeGame is primarily intended for editor-based experimentation, debugging, and visualization rather than distribution as a standalone build. The Scene view and Unity Inspector are the main tools for configuring and observing simulations; in-game menus and a polished player-facing interface are not currently goals of the project.
 
@@ -23,18 +23,20 @@ MazeGame is primarily intended for editor-based experimentation, debugging, and 
 Unless explicitly disclosed, all text in this Readme and all code has been written by a human, which is me. Direct any praise and criticism to the person behind the project. I take pride in doing my own work. Thank you. :D
 
 # Workflow
+> This Unity project is intended to be used mostly in the `Scene` window and does not expect to ever be turned into a proper build. The tools made for testing and visualizing all live in the editor and In-Game tools or menus are not planned.
+
 To create new [Players] or [Mazes]: Check their respective sections in the _Readme_.
 
 To test several [Players] and [Mazes]:
 1. Add a [MultiTester] prefab to project hierarchy.
-    - 2 prefabs are already provided: one empty and one with [RandomPlayer] and all [Mazes].
-2. Fill any empty fields in the [MultiTester] with your desired data and adjust its settings to your preference.
+    - 2 prefabs are already provided: one empty and one with [RandomPlayer] and all [Mazes] for you to try.
+2. Fill any empty fields in the [MultiTester] with your desired data (select or drag new [Mazes] and [Players] to the list) and adjust the settings to your preference.
 3. Press play in the editor.
 4. Use the keybinds or the options in the [MultiTester] inspector window to change any settings during the game.
 
 To test a single pairing of [Player] and [Maze]:
 1. Add a [GameManager] prefab to project hierarchy.
-2. Fill any empty fields in the [GameManager] with your desired data and adjust its settings to your preference.
+2. Fill any empty fields in the [GameManager] with your desired data (select or drag a [Maze] and a [Player] to the Inspector fields) and adjust the settings to your preference.
     - Remember to set `Standalone` in `Game Visualization Settings` to true for inputs and [HumanPlayer] to work.
 3. Press play in the editor.
 4. Use the keybinds or the options in the [MultiTester] inspector window to change any settings during the game.
@@ -58,8 +60,8 @@ To test a single pairing of [Player] and [Maze]:
 ## Bugs
 - [x] Dead Player instance spawns wrong.
 - [x] Fix HumanPlayer
-- [ ] Add Clone() to Observation
-- [ ] Change Players to MonoBehaviour
+- [x] Add Clone() to Observation
+- [x] Change Players to MonoBehaviour
     - [ ] Update Readme with the new info on how to use them
 
 # C# Scripts
@@ -173,14 +175,10 @@ Maze layouts are ScriptableObject assets. To create a new maze:
 > **_AI DISCLAIMER_**: The `MazeScriptAssetGenerator.cs` script in `Assets\Editor\` has been written with the help of Generative AI. The decision in favour of this approach with the help of AI as opposed to the initial hand-crafted approach of making new [Maze] scripts and manually making prefabs with them as components has been taken due to in editor comfort and general good Unity development practices. Although the code has been written by Gen AI, it has been done under human supervision.
 
 ## Players
-AI players use the same ScriptableObject workflow as the Mazes. 
-1. Create a concrete class that inherits from `Player`.
-2. Select the `0_PlayerAssetGenerator` asset in `Assets\Prefabs\Players\` to open its inspector window.
-3. Drag the C# player script into its `Player Script` field and click `Create Player Asset`.
-4. Set the output folder (default is the same folder the generator is in), then click `Create Player Asset`.
-5. Drag the generated `.asset` into the `Player` field on the `GameManager`.
+AI Players work similarly to how they did in the Python version, with minor changes for Unity use comfort:
+- They still are inheritors of a base [Player] class, with their `Think()` method.
+- They are now also [MonoBehaviours], which the base class inherits and passes to its children. This allows for a few things:
+    - Inspector field editing, to set any initial atributes you may want (like Heuristics, for example)
+    - Access to the `Start()` or `Update()` methods, which [HumanPlayer] directly required in way or another to handle inputs.
 
-The visual `player_prefab` remains a separate scene object. It is only the
-rendered player model; the generated Player asset contains the decision-making
-logic. Override `Reset()` in stateful players when they need per-game cleanup.
-> **_AI DISCLAIMER_**: As they use the same approach, the `PlayerScriptAssetGenerator.cs` script in `Assets\Editor\` has been written with the help of Generative AI, same as with the mazes. The decision in favour of this approach with the help of AI as opposed to the initial hand-crafted approach of making new [Player] scripts and manually making prefabs with them as components has been taken due to in editor comfort and general good Unity development practices. Although the code has been written by Gen AI, it has been done under human supervision.
+To add them to a [MultiTester] or [GameManager], you can just choose or drag the script to the field. If you want to have more control over the initial atributes, create a prefab of an empty object with the script as component and set the info.

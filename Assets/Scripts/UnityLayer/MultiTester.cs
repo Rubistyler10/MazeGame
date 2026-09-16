@@ -60,6 +60,7 @@ public class MultiTester : GameSimulator
         SetUpMultiTester();
     }
 
+    // Set up the input handler for the game manager so it can receive inputs, if it doesn't already exist
     void SetUpInputHandler()
     {
         if (input_handler == null)
@@ -69,6 +70,7 @@ public class MultiTester : GameSimulator
         }
     }
 
+    // Set up the multi-tester by checking if there are players and mazes specified, and calculating the total number of game simulations to run
     void SetUpMultiTester()
     {
         if (player_list.Length == 0)
@@ -80,6 +82,7 @@ public class MultiTester : GameSimulator
         SimulateNextGame();
     }
 
+    // Simulate a single game by instantiating a GameManager prefab, setting it up with the current player and maze, and incrementing the repetition count and game simulation count
     void SimulateGame()
     {
         GameManager game_manager = Instantiate(game_manager_prefab);
@@ -92,6 +95,7 @@ public class MultiTester : GameSimulator
         game_simulation_count++;
     }
 
+    // Simulate the next game by checking if there are more games to simulate, and if so, either incrementing the repetition count or moving on to the next player and maze. If all games have been simulated, log a message and return.
     void SimulateNextGame()
     {
         if (game_simulation_count <= total_game_simulations)
@@ -131,7 +135,7 @@ public class MultiTester : GameSimulator
         }
     }
 
-
+    // Set up the GameManager with the specified maze and player, and set the budget, max iterations, and visualization settings
     void SetUpGameManager(GameManager game_manager, Maze maze, Player player)
     {
         game_manager.maze = maze;
@@ -146,7 +150,7 @@ public class MultiTester : GameSimulator
         game_manager.is_standalone = false;
     }
 
-    // Input Handling
+    // INPUT HANDLER METHODS START
     public override void ResetGameInputPress()
     {
         if (current_game_simulation != null)
@@ -198,6 +202,10 @@ public class MultiTester : GameSimulator
     {
         start_next_game = true;
     }
+    // INPUT HANDLER METHODS END
+
+
+    // Helper method to increase or decrease auto-play speed and mantain it above minimum. Also updates the current game simulation if it exists.
     void ChangeAutoPlaySpeed(float delta)
     {
         auto_play_speed = Mathf.Max(MIN_AUTO_PLAY_SPEED, auto_play_speed + delta);

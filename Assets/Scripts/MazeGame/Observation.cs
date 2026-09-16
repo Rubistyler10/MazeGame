@@ -5,10 +5,13 @@ public class Observation
     Maze maze;
     public int iteration_number {get; private set;} = 0;
     int max_iterations = 0;
+    private GameState gameState;
+    bool invalid_position = false;
 
-
-    public Observation(GameState gameState)
+    public Observation(GameState gameState = null)
     {
+        if (gameState == null) return;
+        this.gameState = gameState;
         int[] pos = gameState.GetPosition();
         row = pos[0];
         col = pos[1];
@@ -24,13 +27,10 @@ public class Observation
     }
 
     public void SetPosition(int new_row, int new_col)
-    {
-        if (maze.IsWall(new_row, new_col))
+    {  
+        if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols || maze.IsWall(new_row, new_col))
         {
-            return;
-        }
-        else if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols)
-        {
+            invalid_position = true;
             return;
         }
         else
@@ -73,5 +73,26 @@ public class Observation
         return maze.IsHole(row, col);
     }
 
+    public bool IsInvalidPosition()
+    {
+        return invalid_position;
+    }
+
+    public Observation Clone()
+    {
+        Observation clone = new Observation(this.gameState);
+        clone.gameState = this.gameState;
+        clone.row = row;
+        clone.col = col;
+        clone.maze = maze;
+        clone.iteration_number = iteration_number;
+        clone.max_iterations = max_iterations;
+        return clone;
+    }
+
+    public int[] GetGoalPosition()
+    {
+        return maze.GetGoalPosition();
+    }
 
 }

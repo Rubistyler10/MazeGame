@@ -47,11 +47,11 @@ public class GameManager : GameSimulator
     [HideInInspector] public bool step_pressed = false;
     private GameObject player_dead_instance;
     private InputHandler inputHandler;
-    private HumanPlayer_InputHandler humanPlayer_inputHandler;
     const float CHANGE_SPEED_AMOUNT = 1f;
     const float STRONG_CHANGE_SPEED_AMOUNT = 2f;
     const float MIN_AUTO_PLAY_SPEED = 1f;
 
+    // Start is called before the first frame update
     void Start()
     {
         if (is_standalone) SetUpInputHandler();
@@ -60,10 +60,9 @@ public class GameManager : GameSimulator
         CreateGame();
         // Spawn the game world representation of the game
         if (visualize_game) SpawnGameWorld();
-
-        SetUpHumanPlayerInputHandler();
     }
 
+    // Set up the input handler for the game manager so it can receive inputs, if it doesn't already exist
     void SetUpInputHandler()
     {
         if (inputHandler == null)
@@ -72,26 +71,15 @@ public class GameManager : GameSimulator
             inputHandler.SetInputReceiver(this);
         }
     }
-        
-    void SetUpHumanPlayerInputHandler()
-    {
-        if (player is HumanPlayer)
-        {
-            humanPlayer_inputHandler = this.gameObject.AddComponent<HumanPlayer_InputHandler>();
-            humanPlayer_inputHandler.enabled = true;
-            humanPlayer_inputHandler.humanPlayer = (HumanPlayer)player;
-        }
-    }
-
+    
+    // Create the underlying game
     void CreateGame()
     {
-        // Create the underlying game
-        /* GameObject game_prefab_instatiation = Instantiate(game_prefab);
-        gameScript = game_prefab_instatiation.GetComponent<Game>(); */
         gameScript = new Game();
         gameScript.SetupGame(maze, player, budget, max_iterations);
     }
 
+    // Create the game world representation of the game, including the maze and the player
     void SpawnGameWorld(){
         // Create an empty parent object to hold the maze
         maze_parent = new GameObject("Maze");
@@ -133,6 +121,7 @@ public class GameManager : GameSimulator
         SpawnPlayerInstance(maze_parent);
     }
 
+    // Spawn the player representation in the game world at the start position of the maze
     void SpawnPlayerInstance(GameObject maze_parent)
     {
         // Spawn the player
@@ -141,7 +130,8 @@ public class GameManager : GameSimulator
         player_instance.transform.SetParent(maze_parent.transform, false);
     }
 
-    // Input Handling
+
+    // INPUT HANDLER METHODS START
     public override void ResetGameInputPress()
     {
         ResetGame(force_reset: false);
@@ -178,7 +168,10 @@ public class GameManager : GameSimulator
     {
         ToggleBumpAnimation();
     }
+    /// INPUT HANDLER METHODS END
 
+
+    /// Setting the changes to any settings is done as methods so the MultiTester can call them directly
     public void ToggleAutoPlay()
     {
         auto_play = !auto_play;
@@ -196,7 +189,7 @@ public class GameManager : GameSimulator
         allow_bump_animation = !allow_bump_animation;
     }
 
-
+    // Update is called once per frame
     void Update()
     {   
         if (game_ended) return;
@@ -221,6 +214,7 @@ public class GameManager : GameSimulator
         }
     }
 
+    // Check if the game has ended and handle the end of the game, including creating an instance of a dead player
     bool CheckForGameEnd(bool visualize_game)
     {
         if (gameScript.game_ended && !game_ended)
@@ -239,6 +233,7 @@ public class GameManager : GameSimulator
         else return false;
     }
 
+    // Reset the game, either forcefully or only if the game has ended
     public void ResetGame(bool force_reset)
     {
         if (!force_reset && !game_ended) return;
@@ -259,6 +254,7 @@ public class GameManager : GameSimulator
         }
     }
 
+    // Middleman for the Step() method in the Game class, to allow for animations and such
     void StepGame()
     {
         current_iteration_number = gameScript.GetCurrentIterationNumber();
@@ -267,6 +263,7 @@ public class GameManager : GameSimulator
         else StepGameWithAnimation();
     }
 
+    // Save information needed for the animations and step the game
     void StepGameWithAnimation()
     {
         // Save the position of the player before stepping
@@ -279,14 +276,14 @@ public class GameManager : GameSimulator
         is_animating = true;
     }
 
+    // Step the game without any animations, for when the game is running in the background
     void StepGameNoAnimation()
     {
         gameScript.Step();
         CheckForGameEnd(visualize_game);
     }
 
-    
-
+    // Auxiliary method to translate the position in the maze to world coordinates, assuming each cell is 1 unit in size and the maze is centered at (0, 0)
     Vector3 TranslatePositionToWorldCoordinates(int row, int col)
     {
         // Translate the position in the maze to world coordinates
@@ -294,13 +291,14 @@ public class GameManager : GameSimulator
         return new Vector3(col, 1, -row);
     }
 
+    // Move the player instance to the new position, with or without bump animation
     void MovePlayerInstance(bool allow_bump_animation)
     {
         if (allow_bump_animation) MovePlayerInstance_BumpEnabled();
         else MovePlayerInstanceToPosition(target_pos);
     }
 
-
+    /// Move the player instance to the new position, with bump animation if the player tries to move into a wall
     void MovePlayerInstance_BumpEnabled()
     {
         if (previous_pos == target_pos && player_action != null)
@@ -351,6 +349,7 @@ public class GameManager : GameSimulator
         } 
     }
 
+    // Move the player instance to the new position, with a smooth transition
     void MovePlayerInstanceToPosition(Vector3 target_pos, float animation_speed_modifier = 1f)
     {
         Debug.Log("[GAMEMANAGER][MOVEPLAYERINSTANCE] Moving player from " + previous_pos + " to " + target_pos);
@@ -359,6 +358,7 @@ public class GameManager : GameSimulator
         player_instance.transform.localPosition = Vector3.MoveTowards(player_instance.transform.localPosition, target_pos, step);
     }
 
+    // Check if the player instance has reached the target position, and if so, stop animating to allow the game to continue
     bool CheckAnimationEnd()
     {
         if (Vector3.Distance(player_instance.transform.localPosition, target_pos) < 0.01f)
