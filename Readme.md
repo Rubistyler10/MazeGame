@@ -57,7 +57,10 @@ To test a single pairing of [Player] and [Maze]:
 
 ## Bugs
 - [x] Dead Player instance spawns wrong.
-- [x] Fix HumanPlayer 
+- [x] Fix HumanPlayer
+- [ ] Add Clone() to Observation
+- [ ] Change Players to MonoBehaviour
+    - [ ] Update Readme with the new info on how to use them
 
 # C# Scripts
 ## Game
