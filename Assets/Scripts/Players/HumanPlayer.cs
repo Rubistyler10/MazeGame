@@ -4,24 +4,6 @@ using UnityEngine.InputSystem;
 public class HumanPlayer : Player
 {
     public Vector2 move_input;    
-    InputAction moveAction;
-    private void OnEnable()
-    {
-        moveAction = InputSystem.actions.FindAction("MovementAxis");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (moveAction.IsPressed())
-        {
-            move_input = moveAction.ReadValue<Vector2>();
-        }
-        if (moveAction.WasReleasedThisFrame())
-        {
-            move_input = Vector2.zero;
-        }
-    }
 
     public override Action Think(Observation observation, int budget)
     {
@@ -36,6 +18,8 @@ public class HumanPlayer : Player
         move_input = Vector2.zero;
         return chosen_action;
     }
+
+    public override void Reset(){}
 
     public override string ToString()
     {
