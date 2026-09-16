@@ -62,7 +62,7 @@ To test a single pairing of [Player] and [Maze]:
 - [x] Fix HumanPlayer
 - [x] Add Clone() to Observation
 - [x] Change Players to MonoBehaviour
-    - [ ] Update Readme with the new info on how to use them
+    - [x] Update Readme with the new info on how to use them
 
 # C# Scripts
 ## Game
@@ -177,8 +177,13 @@ Maze layouts are ScriptableObject assets. To create a new maze:
 ## Players
 AI Players work similarly to how they did in the Python version, with minor changes for Unity use comfort:
 - They still are inheritors of a base [Player] class, with their `Think()` method.
-- They are now also [MonoBehaviours], which the base class inherits and passes to its children. This allows for a few things:
-    - Inspector field editing, to set any initial atributes you may want (like Heuristics, for example)
-    - Access to the `Start()` or `Update()` methods, which [HumanPlayer] directly required in way or another to handle inputs.
+- The `Reset()` method is their main way to do set up. If you need to tell the script it needs something ready it should happen there.
+- They are now also [MonoBehaviours], which the base class inherits and passes to its children.
+    - This allows for Inspector field editing, to set any initial atributes you may want or adding new components you may need (like Heuristics)
 
-To add them to a [MultiTester] or [GameManager], you can just choose or drag the script to the field. If you want to have more control over the initial atributes, create a prefab of an empty object with the script as component and set the info.
+If your script is simple and doesn't use any additional scripts to work ([HumanPlayer], for example **does** need an additional script in the form of the inputhandler it uses for access to Update()), you can drag it to the Player field in [GameManager] or [MultiTester], if it (probably) isn't that simple, then:
+
+1. Create a new empty GameObject in the Hierarchy.
+2. Add your [Player] script as a component.
+3. Drag that GameObject to the Project tab to create a prefab.
+Creating a prefab for every Player is strongly recommended for ease of editing and use of them. [HumanPlayer] is a good example of a usecase for the prefabs.
