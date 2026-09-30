@@ -63,6 +63,11 @@ To test a single pairing of [Player] and [Maze]:
     - 1 HumanPlayer, [n] NPC Players trying to follow it
     - Every turn, HumanPlayer makes a move, then the rest of players do theirs.
     - Game ends when NPC Player reaches HumanPlayer's current position or HumanPlayer reaches goal.
+    - [ ] Add NPC prefab instance for visualization in GameManager.
+    - [ ] Add a isMultiplayer attribute in GameManager.
+    - [ ] Adapt Game to the new multiplayer system:
+        - [ ] Allow it to receive several players.
+        - [ ] Create a GameState for each player. / Could also change GameState to allow several players, check that.
 
 ## Bugs
 - [x] Dead Player instance spawns wrong.
