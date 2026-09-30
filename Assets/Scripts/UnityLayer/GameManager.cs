@@ -1,3 +1,4 @@
+#pragma warning disable 0414
 using UnityEngine;
 public class GameManager : GameSimulator
 {
@@ -10,28 +11,41 @@ public class GameManager : GameSimulator
     [Header("Game Visualization Settings")]
     [Tooltip("Is this GameManager running without a MultiTester? If true, the GameManager will handle input and visualization. If false, the MultiTester will handle input and visualization.")]
     public bool is_standalone = false;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(is_standalone))]
     [Tooltip("Should the game be visualized in the Game World? If false, the game will run in the background without any visualization.")]
     public bool visualize_game = true;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(is_standalone))]    
     [Tooltip("Should the game auto-play without user input? If true, the game will step automatically as soon as the previous step animation is complete.")]
     public bool auto_play = false;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(is_standalone))]
     [Tooltip("The speed at which the game auto-plays, in steps per second.")]
     public float auto_play_speed = 1f;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(is_standalone))]
     [Tooltip("Should the game allow bump animations when the player tries to move into a wall? If true, the player will move slightly into the wall and then return to their original position (For flair only).")]
     public bool allow_bump_animation = false;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(is_standalone))]
     [Tooltip("The speed multiplier for the bump animation. A value of 1 means the bump animation will take the same amount of time as a normal step. A value of 2 means the bump animation will take half the time of a normal step.")]
     public float bump_animation_speed_multiplier = 1f;
     private bool bump_return = false;
 
     [Header("GameWorld Assets")]
+    [SerializeField] private bool showAssetList = false;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject player_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject player_dead_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject empty_cell_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject start_cell_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject hole_cell_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject wall_cell_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject goal_cell_prefab;
 
-    [Header("Game Information")]
+    [Header("Game Information [For Debugging Purposes, Do Not Change]")]
     public bool game_ended = false;
     public int current_iteration_number = 0;
 
