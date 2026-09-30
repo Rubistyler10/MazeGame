@@ -1,3 +1,6 @@
+# Credits
+The _ShowIf.cs_ script, which adds some inspector utilities, was made by FahimKamal. [Link](https://github.com/FahimKamal/Unity_ShowIf_Attribute)
+
 # Summary
 > This Summary has been written by Generative AI
 
