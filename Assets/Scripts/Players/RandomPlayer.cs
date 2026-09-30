@@ -14,4 +14,9 @@ public class RandomPlayer : Player
     {
         return "RandomPlayer";
     }
+
+    public override void ResetPlayer()
+    {
+        // No state to reset for RandomPlayer
+    }
 }

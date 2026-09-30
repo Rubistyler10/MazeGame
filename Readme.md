@@ -56,6 +56,10 @@ To test a single pairing of [Player] and [Maze]:
 - [ ] Implement Data Gathering into csv files
 - [x] Finish Readme documentation
 - [ ] Add a setter function to the game settings in multitester to allow real-time change of settings through inspector and not just keybinds
+- [ ] Add multiplayer support for the game
+    - 1 HumanPlayer, [n] NPC Players trying to follow it
+    - Every turn, HumanPlayer makes a move, then the rest of players do theirs.
+    - Game ends when NPC Player reaches HumanPlayer's current position or HumanPlayer reaches goal.
 
 ## Bugs
 - [x] Dead Player instance spawns wrong.
