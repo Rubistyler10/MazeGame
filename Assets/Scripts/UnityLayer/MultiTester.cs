@@ -235,5 +235,14 @@ public class MultiTester : GameSimulator
         }
     }
 
-
+    void OnValidate()
+    {
+        if (current_game_simulation != null)
+        {
+            current_game_simulation.auto_play = auto_play;
+            current_game_simulation.auto_play_speed = auto_play_speed;
+            current_game_simulation.allow_bump_animation = allow_bump_animation;
+            current_game_simulation.bump_animation_speed_multiplier = bump_animation_speed_multiplier;                
+        }
+    }
 }

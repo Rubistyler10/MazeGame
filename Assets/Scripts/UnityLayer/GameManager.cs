@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-
 public class GameManager : GameSimulator
 {
     [Header("Game Settings")]

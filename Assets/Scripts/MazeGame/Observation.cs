@@ -28,6 +28,7 @@ public class Observation
 
     public void SetPosition(int new_row, int new_col)
     {  
+        invalid_position = false;
         if (new_row < 0 || new_row >= maze.num_rows || new_col < 0 || new_col >= maze.num_cols || maze.IsWall(new_row, new_col))
         {
             invalid_position = true;
@@ -87,6 +88,7 @@ public class Observation
         clone.maze = maze;
         clone.iteration_number = iteration_number;
         clone.max_iterations = max_iterations;
+        clone.invalid_position = invalid_position;
         return clone;
     }
 

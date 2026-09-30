@@ -24,7 +24,7 @@ public class Game
         this.maze = maze;
         this.player = player;
         this.budget = budget;
-        this.player.Reset();
+        this.player.ResetPlayer();
         travelled_path.Clear();
         final_iteration_number = 0;
 
