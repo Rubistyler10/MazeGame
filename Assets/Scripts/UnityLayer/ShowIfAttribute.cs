@@ -11,6 +11,10 @@ public enum ConditionOperator
     AND,
     // A field is visible/enabled if at least ONE condition is true.
     OR,
+    // A field is visible/enabled if at least ONE condition is false.
+    NOR,
+    // A field is visible/enabled only if all conditions are false.
+    NAND,
 }
 
 public enum ActionOnConditionFail
@@ -121,7 +125,7 @@ public class ShowIfAttributeDrawer : PropertyDrawer
 
         if (conditionValues.Count > 0)
         {
-            bool met;
+            bool met = false;
             if (showIfAttribute.Operator == ConditionOperator.AND)
             {
                 met = true;
@@ -130,13 +134,31 @@ public class ShowIfAttributeDrawer : PropertyDrawer
                     met = met && value;
                 }
             }
-            else
+            else if (showIfAttribute.Operator == ConditionOperator.OR)
             {
                 met = false;
                 foreach (var value in conditionValues)
                 {
                     met = met || value;
                 }
+            }
+            else if (showIfAttribute.Operator == ConditionOperator.NAND)
+            {
+                met = true;
+                foreach (var value in conditionValues)
+                {
+                    met = met && value;
+                }
+                met = !met;
+            }
+            else if (showIfAttribute.Operator == ConditionOperator.NOR)
+            {
+                met = false;
+                foreach (var value in conditionValues)
+                {
+                    met = met || value;
+                }
+                met = !met;
             }
 
             return met;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class MultiTester : GameSimulator
@@ -20,6 +21,15 @@ public class MultiTester : GameSimulator
     [SerializeField] private Player[] player_list;
     [SerializeField] private int budget = 100;
     [SerializeField] private int max_iterations = 100;
+    [Tooltip("Activates multiplayer mode if not empty. List of pursuing players that will chase the main player.")]
+    public Player[] pursuerPlayers;
+    public bool IsMultiplayer ()=> pursuerPlayers.Length > 0;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(IsMultiplayer))]
+    [Tooltip("Randomize the starting position of the pursuing players in multiplayer mode. If false, the pursuers will start at the same position as the main player.")]
+    public bool randomizeStartPositions = true;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.NAND, nameof(randomizeStartPositions))]
+    [Tooltip("The amount of turns the pursuers will wait before starting to chase the main player. Minimum value is 1 to avoid instant failure.")]
+    public int  gracePeriod { get { return gracePeriod; } set { gracePeriod = Math.Max(1, value);  } }
 
     [Header("Game Visualization Settings")]
     [SerializeField] private bool visualize_game = true;
@@ -90,7 +100,27 @@ public class MultiTester : GameSimulator
         current_game_simulation = game_manager;
         repetition_count++;
         game_simulation_count++;
+
+        if (IsMultiplayer())
+        {
+            foreach (Player pursuer in pursuerPlayers)
+            {
+                GameManager pursuer_manager = Instantiate(game_manager_prefab);
+                pursuer_manager.name = $"GameManager_{pursuer}_{maze_list[maze_index]}_Run{repetition_count + 1}";
+                pursuer_manager.transform.SetParent(game_manager.transform, false);
+                SetUpPursuerGameManager(pursuer_manager, GetMazeClone(maze_list[maze_index]), pursuer);
+
+                // Set the multiplayer child flag to true so that the pursuer game managers don't create their own games
+                pursuer_manager.multiplayer_is_pursuer = true;
+                game_manager.AddPursuerGameManager(pursuer_manager);
+            }
+        }
     }
+
+    private Maze GetMazeClone(Maze maze)
+    {
+        return maze.Clone();
+    } 
 
     // Simulate the next game by checking if there are more games to simulate, and if so, either incrementing the repetition count or moving on to the next player and maze. If all games have been simulated, log a message and return.
     void SimulateNextGame()
@@ -145,6 +175,13 @@ public class MultiTester : GameSimulator
         game_manager.allow_bump_animation = allow_bump_animation;
         game_manager.bump_animation_speed_multiplier = bump_animation_speed_multiplier;
         game_manager.is_standalone = false;
+    }
+
+    void SetUpPursuerGameManager(GameManager pursue_game_manager, Maze maze, Player player)
+    {
+        SetUpGameManager(pursue_game_manager, maze, player);
+        pursue_game_manager.multiplayer_is_pursuer = true;
+
     }
 
     // INPUT HANDLER METHODS START
@@ -215,8 +252,6 @@ public class MultiTester : GameSimulator
     void Update()
     {
         if(current_game_simulation == null) return;
-
-        //InputHandling();
 
         if (current_game_simulation.game_ended)
         {

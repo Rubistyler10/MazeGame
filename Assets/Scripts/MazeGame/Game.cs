@@ -77,4 +77,9 @@ public class Game
     {
         return gameState.iteration_number;
     }
+
+    internal void UpdateGoalPosition(int v1, int v2)
+    {
+        throw new System.NotImplementedException();
+    }
 }

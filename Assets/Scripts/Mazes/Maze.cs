@@ -111,4 +111,8 @@ public class Maze : ScriptableObject
         return "Base Maze Class";
     }
 
+    internal Maze Clone()
+    {
+        throw new NotImplementedException();
+    }
 }

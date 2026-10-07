@@ -1,4 +1,6 @@
 #pragma warning disable 0414
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 public class GameManager : GameSimulator
 {
@@ -7,6 +9,7 @@ public class GameManager : GameSimulator
     public Player player;
     public int budget = 100;
     public int max_iterations = 100;
+
 
     [Header("Game Visualization Settings")]
     [Tooltip("Is this GameManager running without a MultiTester? If true, the GameManager will handle input and visualization. If false, the MultiTester will handle input and visualization.")]
@@ -35,6 +38,10 @@ public class GameManager : GameSimulator
     [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject player_dead_prefab;
     [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
+    [SerializeField] private GameObject pursuer_player_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
+    [SerializeField] private GameObject pursuer_player_dead_prefab;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject empty_cell_prefab;
     [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(showAssetList))]
     [SerializeField] private GameObject start_cell_prefab;
@@ -53,20 +60,33 @@ public class GameManager : GameSimulator
     private GameObject maze_parent;
     private Game gameScript;
     private bool is_animating = false;
-    Vector3 previous_pos = Vector3.zero;
-    Action player_action = null;
-    Vector3 target_pos = Vector3.zero;
+    private Vector3 previous_pos = Vector3.zero;
+    private Action player_action = null;
+    private Vector3 target_pos = Vector3.zero;
     [HideInInspector] public bool step_pressed = false;
     private GameObject player_dead_instance;
     private InputHandler inputHandler;
     private HumanPlayer_InputHandler humanPlayer_inputHandler;
-    const float CHANGE_SPEED_AMOUNT = 1f;
-    const float STRONG_CHANGE_SPEED_AMOUNT = 2f;
-    const float MIN_AUTO_PLAY_SPEED = 1f;
+    private const float CHANGE_SPEED_AMOUNT = 1f;
+    private const float STRONG_CHANGE_SPEED_AMOUNT = 2f;
+    private const float MIN_AUTO_PLAY_SPEED = 1f;
+
+    // Multiplayer mode variables
+    public bool multiplayer_is_pursuer = false;
+    [HideInInspector] public bool multiplayer_mode_active = false;
+    [HideInInspector] public List<GameManager> pursuer_game_managers = null;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        // Multiplayer children only need a Game and the player instance
+        if (multiplayer_is_pursuer) {
+            CreateGame();
+            SpawnPlayerInstance(this.gameObject);
+            return; 
+        }
+
+
         if (is_standalone) SetUpInputHandler();
 
         // Create the underlying game
@@ -78,7 +98,7 @@ public class GameManager : GameSimulator
     }
 
     // Set up the input handler for the game manager so it can receive inputs, if it doesn't already exist
-    void SetUpInputHandler()
+    private void SetUpInputHandler()
     {
         if (inputHandler == null)
         {
@@ -86,7 +106,7 @@ public class GameManager : GameSimulator
             inputHandler.SetInputReceiver(this);
         }
     }
-    void SetUpHumanPlayerInputHandler()
+    private void SetUpHumanPlayerInputHandler()
     {
         if (player is HumanPlayer)
         {
@@ -95,16 +115,16 @@ public class GameManager : GameSimulator
             humanPlayer_inputHandler.humanPlayer = (HumanPlayer)player;
         }
     }
-    
+
     // Create the underlying game
-    void CreateGame()
+    private void CreateGame()
     {
         gameScript = new Game();
         gameScript.SetupGame(maze, player, budget, max_iterations);
     }
 
     // Create the game world representation of the game, including the maze and the player
-    void SpawnGameWorld(){
+    private void SpawnGameWorld(){
         // Create an empty parent object to hold the maze
         maze_parent = new GameObject("Maze");
         maze_parent.transform.SetParent(transform, false);
@@ -146,12 +166,12 @@ public class GameManager : GameSimulator
     }
 
     // Spawn the player representation in the game world at the start position of the maze
-    void SpawnPlayerInstance(GameObject maze_parent)
+    private void SpawnPlayerInstance(GameObject parent)
     {
         // Spawn the player
         int[] start_pos = maze.GetStartPosition();
         player_instance = Instantiate(player_prefab, new Vector3(start_pos[1], 1, -start_pos[0]), Quaternion.identity);
-        player_instance.transform.SetParent(maze_parent.transform, false);
+        player_instance.transform.SetParent(parent.transform, false);
     }
 
 
@@ -214,11 +234,35 @@ public class GameManager : GameSimulator
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {   
-        if (game_ended) return;
+        // Multiplayer children don't need to update the game, as the main player will handle that
+        if (multiplayer_is_pursuer) return;
+        if (!multiplayer_mode_active) 
+        {
+            OnUpdate();
+            return;
+        }
+
+
+        int pursuer_animation_counter = 0;
+        bool pursuer_animations_finished = pursuer_animation_counter == pursuer_game_managers.Count;
+
+        OnUpdate(pursuer_animations_finished);
+        foreach (GameManager pursuer_manager in pursuer_game_managers)
+        {
+            pursuer_manager.OnUpdate(pursuer_animations_finished);
+            if (!pursuer_manager.is_animating) pursuer_animation_counter++;
+        }
         
-        if (!is_animating)
+    }
+
+    public void OnUpdate(bool pursuer_animations_finished = true)
+    {
+
+        if (game_ended) return;
+
+        if (!is_animating && pursuer_animations_finished)
         {
             if (CheckForGameEnd(visualize_game)) return;
 
@@ -227,6 +271,7 @@ public class GameManager : GameSimulator
                 // Step the game
                 StepGame();
                 step_pressed = false;
+                if (multiplayer_mode_active && !multiplayer_is_pursuer) UpdatePursuerGoals();
             }
         }
 
@@ -238,8 +283,19 @@ public class GameManager : GameSimulator
         }
     }
 
+    private void UpdatePursuerGoals()
+    {
+        if (pursuer_game_managers == null) return;
+
+        int[] main_player_pos = gameScript.GetCurrentPosition();
+        foreach (GameManager pursuer_manager in pursuer_game_managers)
+        {
+            pursuer_manager.gameScript.UpdateGoalPosition(main_player_pos[0], main_player_pos[1]);
+        }
+    }
+
     // Check if the game has ended and handle the end of the game, including creating an instance of a dead player
-    bool CheckForGameEnd(bool visualize_game)
+    private bool CheckForGameEnd(bool visualize_game)
     {
         if (gameScript.game_ended && !game_ended)
         {
@@ -279,7 +335,7 @@ public class GameManager : GameSimulator
     }
 
     // Middleman for the Step() method in the Game class, to allow for animations and such
-    void StepGame()
+    private void StepGame()
     {
         current_iteration_number = gameScript.GetCurrentIterationNumber();
 
@@ -288,7 +344,7 @@ public class GameManager : GameSimulator
     }
 
     // Save information needed for the animations and step the game
-    void StepGameWithAnimation()
+    private void StepGameWithAnimation()
     {
         // Save the position of the player before stepping
         previous_pos = TranslatePositionToWorldCoordinates(gameScript.GetCurrentPosition()[0], gameScript.GetCurrentPosition()[1]);
@@ -301,14 +357,14 @@ public class GameManager : GameSimulator
     }
 
     // Step the game without any animations, for when the game is running in the background
-    void StepGameNoAnimation()
+    private void StepGameNoAnimation()
     {
         gameScript.Step();
         CheckForGameEnd(visualize_game);
     }
 
     // Auxiliary method to translate the position in the maze to world coordinates, assuming each cell is 1 unit in size and the maze is centered at (0, 0)
-    Vector3 TranslatePositionToWorldCoordinates(int row, int col)
+    private Vector3 TranslatePositionToWorldCoordinates(int row, int col)
     {
         // Translate the position in the maze to world coordinates
         // Assuming each cell is 1 unit in size and the maze is centered at (0, 0)
@@ -316,14 +372,14 @@ public class GameManager : GameSimulator
     }
 
     // Move the player instance to the new position, with or without bump animation
-    void MovePlayerInstance(bool allow_bump_animation)
+    private void MovePlayerInstance(bool allow_bump_animation)
     {
         if (allow_bump_animation) MovePlayerInstance_BumpEnabled();
         else MovePlayerInstanceToPosition(target_pos);
     }
 
     /// Move the player instance to the new position, with bump animation if the player tries to move into a wall
-    void MovePlayerInstance_BumpEnabled()
+    private void MovePlayerInstance_BumpEnabled()
     {
         if (previous_pos == target_pos && player_action != null)
         {
@@ -374,7 +430,7 @@ public class GameManager : GameSimulator
     }
 
     // Move the player instance to the new position, with a smooth transition
-    void MovePlayerInstanceToPosition(Vector3 target_pos, float animation_speed_modifier = 1f)
+    private void MovePlayerInstanceToPosition(Vector3 target_pos, float animation_speed_modifier = 1f)
     {
         Debug.Log("[GAMEMANAGER][MOVEPLAYERINSTANCE] Moving player from " + previous_pos + " to " + target_pos);
         // Move the player instance to the new position, with a smooth transition
@@ -383,7 +439,7 @@ public class GameManager : GameSimulator
     }
 
     // Check if the player instance has reached the target position, and if so, stop animating to allow the game to continue
-    bool CheckAnimationEnd()
+    private bool CheckAnimationEnd()
     {
         if (Vector3.Distance(player_instance.transform.localPosition, target_pos) < 0.01f)
         {
@@ -393,7 +449,10 @@ public class GameManager : GameSimulator
         return false;
     }
 
-
-
-
+    internal void AddPursuerGameManager(GameManager pursuer_manager)
+    {
+        if (pursuer_game_managers == null) pursuer_game_managers = new List<GameManager>();
+        pursuer_game_managers.Add(pursuer_manager);
+        multiplayer_mode_active = true;
+    }
 }
