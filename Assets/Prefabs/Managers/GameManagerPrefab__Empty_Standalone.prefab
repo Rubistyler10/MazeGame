@@ -54,8 +54,11 @@ MonoBehaviour:
   auto_play_speed: 4
   allow_bump_animation: 1
   bump_animation_speed_multiplier: 1.5
+  showAssetList: 0
   player_prefab: {fileID: 848359483221634351, guid: d91413bb4bb2da74182219a4437f0996, type: 3}
   player_dead_prefab: {fileID: 848359483221634351, guid: 4dd2e10f0de959840b144232fb613a93, type: 3}
+  pursuer_player_prefab: {fileID: 848359483221634351, guid: 57bc8966ab2b3374695f5cfd62b758a6, type: 3}
+  pursuer_player_dead_prefab: {fileID: 848359483221634351, guid: 01895d84f3dded04d9c74001a8ef896f, type: 3}
   empty_cell_prefab: {fileID: 142590281981850935, guid: be7d71c71e194764b9bee8250d5c42aa, type: 3}
   start_cell_prefab: {fileID: 798460826592014407, guid: b23b45dc88fff9842bf9c3a407ba46c3, type: 3}
   hole_cell_prefab: {fileID: 1812159235079957068, guid: 511fc2e693032154885eadeac80a025a, type: 3}
@@ -63,4 +66,8 @@ MonoBehaviour:
   goal_cell_prefab: {fileID: 1491916295773960168, guid: e4f7d1407f4fa5a4fa0ebab218f3cb92, type: 3}
   game_ended: 0
   current_iteration_number: 0
+  is_animating: 0
   step_pressed: 0
+  multiplayer_is_pursuer: 0
+  multiplayer_mode_active: 0
+  pursuer_game_managers: []

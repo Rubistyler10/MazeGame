@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MultiTester : GameSimulator
 {
-    // TO DO: Implement multiple visualizations at once
 
     [Header("Tester Settings")]
     [Tooltip("Number of times each player should be tested on each maze")]
@@ -20,6 +21,15 @@ public class MultiTester : GameSimulator
     [SerializeField] private Player[] player_list;
     [SerializeField] private int budget = 100;
     [SerializeField] private int max_iterations = 100;
+    [Tooltip("Activates multiplayer mode if not empty. List of pursuing players that will chase the main player.")]
+    public Player[] pursuerPlayers;
+    public bool IsMultiplayer ()=> pursuerPlayers.Length > 0;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.AND, nameof(IsMultiplayer))]
+    [Tooltip("Randomize the starting position of the pursuing players in multiplayer mode. If false, the pursuers will start at the same position as the main player.")]
+    public bool randomizeStartPositions = true;
+    [ShowIf(ActionOnConditionFail.DONT_DRAW, ConditionOperator.NAND, nameof(randomizeStartPositions))]
+    [Tooltip("The amount of turns the pursuers will wait before starting to chase the main player. Minimum value is 1 to avoid instant failure.")]
+    public int  gracePeriod { get { return gracePeriod; } set { gracePeriod = Math.Max(1, value);  } }
 
     [Header("Game Visualization Settings")]
     [SerializeField] private bool visualize_game = true;
@@ -90,7 +100,48 @@ public class MultiTester : GameSimulator
         current_game_simulation = game_manager;
         repetition_count++;
         game_simulation_count++;
+
+        if (IsMultiplayer())
+        {
+            Dictionary<Player, int[]> randomized_starting_positions = new Dictionary<Player, int[]>();
+            foreach (Player pursuer in pursuerPlayers)
+            {
+                GameManager pursuer_manager = Instantiate(game_manager_prefab);
+                pursuer_manager.name = $"GameManager_{pursuer}_{maze_list[maze_index]}_Pursuer_Run{repetition_count}";
+                pursuer_manager.transform.SetParent(game_manager.transform, false);
+                
+                Maze cloned_maze = GetMazeClone(maze_list[maze_index]);
+                if (randomizeStartPositions)
+                {
+                    int[] startPos = cloned_maze.GetStartPosition();
+                    int[] goalPos = cloned_maze.GetGoalPosition();
+                    int newRow, newCol;
+                    do
+                    {
+                        newRow = UnityEngine.Random.Range(0, cloned_maze.num_rows);
+                        newCol = UnityEngine.Random.Range(0, cloned_maze.num_cols);
+                    } while (   cloned_maze.IsWall(newRow, newCol)
+                                || cloned_maze.IsHole(newRow, newCol)
+                                || (newRow == startPos[0] && newCol == startPos[1]) 
+                                || (newRow == goalPos[0] && newCol == goalPos[1])
+                                || randomized_starting_positions.ContainsValue(new int[] { newRow, newCol })
+                            );
+                    cloned_maze.SetStartPosition(newRow, newCol);
+                    randomized_starting_positions[pursuer] = new int[] { newRow, newCol };
+                }
+
+                SetUpPursuerGameManager(pursuer_manager, cloned_maze, pursuer, game_manager);
+            }
+        }
     }
+
+    private Maze GetMazeClone(Maze maze)
+    {
+        Maze cloned_maze = maze.Clone();
+
+
+        return cloned_maze;
+    } 
 
     // Simulate the next game by checking if there are more games to simulate, and if so, either incrementing the repetition count or moving on to the next player and maze. If all games have been simulated, log a message and return.
     void SimulateNextGame()
@@ -145,6 +196,14 @@ public class MultiTester : GameSimulator
         game_manager.allow_bump_animation = allow_bump_animation;
         game_manager.bump_animation_speed_multiplier = bump_animation_speed_multiplier;
         game_manager.is_standalone = false;
+    }
+
+    void SetUpPursuerGameManager(GameManager pursuer_game_manager, Maze maze, Player player, GameManager main_game_manager)
+    {
+        SetUpGameManager(pursuer_game_manager, maze, player);
+        pursuer_game_manager.auto_play = true;
+        pursuer_game_manager.multiplayer_is_pursuer = true;
+        main_game_manager.AddPursuerGameManager(pursuer_game_manager);
     }
 
     // INPUT HANDLER METHODS START
@@ -216,8 +275,6 @@ public class MultiTester : GameSimulator
     {
         if(current_game_simulation == null) return;
 
-        //InputHandling();
-
         if (current_game_simulation.game_ended)
         {
             if (auto_start_next_game_on_end) start_next_game = true;
@@ -234,6 +291,7 @@ public class MultiTester : GameSimulator
 
     void OnValidate()
     {
+        auto_play_speed = Mathf.Max(MIN_AUTO_PLAY_SPEED, auto_play_speed);
         if (current_game_simulation != null)
         {
             current_game_simulation.auto_play = auto_play;

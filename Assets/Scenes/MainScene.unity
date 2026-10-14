@@ -397,7 +397,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1441469928502871080, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7302372676784348200, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
       propertyPath: m_LocalPosition.x
@@ -440,13 +440,61 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: auto_play
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: max_iterations
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
       propertyPath: auto_play_speed
-      value: 100
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: game_manager_prefab
+      value: 
+      objectReference: {fileID: 8241501832984458960, guid: 7636fe2b71b262e4daebffb4ea6f9c7c, type: 3}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: maze_list.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: number_of_repetitions
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: player_list.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: 'maze_list.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 937e1e7ec81fcb04391a423f87e63573, type: 2}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: randomizeStartPositions
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
       propertyPath: 'player_list.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: d0cdd5d74cc160245a429b2cf69533de, type: 2}
+      objectReference: {fileID: 1919051704565721888, guid: 82f76f4641456dd40ace6e82cf36d7cb, type: 3}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: pursuerPlayers.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: auto_start_next_game_on_end
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: 'pursuerPlayers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1919051704565721888, guid: 82f76f4641456dd40ace6e82cf36d7cb, type: 3}
+    - target: {fileID: 8744375993389779967, guid: aece8a3c81ea17841bd05c1a3110f595, type: 3}
+      propertyPath: 'pursuerPlayers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1919051704565721888, guid: 82f76f4641456dd40ace6e82cf36d7cb, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -515,7 +563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540783881956069786, guid: ff34abb29d61a6642844a56170e9c18f, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7496437108214527308, guid: ff34abb29d61a6642844a56170e9c18f, type: 3}
       propertyPath: m_LocalPosition.x

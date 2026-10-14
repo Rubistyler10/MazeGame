@@ -60,10 +60,22 @@ To test a single pairing of [Player] and [Maze]:
 - [x] Finish Readme documentation
 - [ ] Add a setter function to the game settings in multitester to allow real-time change of settings through inspector and not just keybinds
 - [ ] Add multiplayer support for the game
-    - 1 HumanPlayer, [n] NPC Players trying to follow it
-    - Every turn, HumanPlayer makes a move, then the rest of players do theirs.
-    - Game ends when NPC Player reaches HumanPlayer's current position or HumanPlayer reaches goal.
-
+    - Finished implementing the visualization of the multiplayer
+    - Add the logic to MazeGame:
+        > - Each pursuer has its own [GameManager] with its own [Game].
+        > - Right now, we update the pursuer goal to the main player's position in the GameManager.
+        > - What we want now is to allow a [Game] instance to tell if it is the main Game or a Pursuer.
+        > - All of the logic has to happen in Game to detach it from the Unity implementation. Creating several Game instances is still fine.
+        > - The plan is to make the main [Game] instance to act as translation layer between it and its pursuers. 
+        > - The pursuers don't know they are following a Player, they are just trying to get to a moving goal.
+        > - We need to consider 2 new terminal scenarios: Main Player moves into a pursuer (Checked after main player's movement aplication) & Pursuer moves into main player (Checked before main player's Think() cycle)
+        >   - All of these can still be checked at the end of each step on the normal terminality check, the order will be main player movement => pursuer movements => terminality check.
+        >   - The other victory and defeat scenarios remain untouched.
+        - [x] Add an array of pursuers to [Game].
+        - [x] Remove `UpdatePursuerGoals()` from [GameManager] and move it to [Game]. Call it from `Step()` after setting the new position of the main player after their action aplication.
+        - [x] On normal game terminality add a condition for the player and any of the pursuers sharing a position.
+        - [ ] ~~(Optional, after everything else) block movement of a pursuer to the position of another pursuer.~~ (Declared out of scope)
+        
 ## Bugs
 - [x] Dead Player instance spawns wrong.
 - [x] Fix HumanPlayer

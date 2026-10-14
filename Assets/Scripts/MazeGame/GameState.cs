@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class GameState
 {
     public Maze maze { get; private set; }
@@ -12,16 +14,33 @@ public class GameState
         return observation;
     }
 
-    public bool IsTerminal()
+    public bool IsTerminal(Game[] pursuer_games = null)
     {
         bool maxed_iterations;
         // This allows for infinite time for players, be careful
         if (max_iterations <= 0)  maxed_iterations = false; 
         else maxed_iterations = iteration_number >= max_iterations;
 
-        return maxed_iterations
-        ||  maze.IsGoal(pos_row, pos_col)
-        ||  maze.IsHole(pos_row, pos_col);
+        // If in multiplayer mode, check for the pursuers winning first
+        // as it would mean we can skip the other checks.
+        if (pursuer_games != null)
+        {
+            foreach (Game pursuerGame in pursuer_games)
+            {
+                if (pursuerGame.game_ended && pursuerGame.HasWon())
+                {
+                    Debug.Log("Pursuer has won, ending game [TEST]");
+                    return true;
+                }
+            }
+        }
+
+        bool is_terminal =  maxed_iterations
+                            ||  maze.IsGoal(pos_row, pos_col)
+                            ||  maze.IsHole(pos_row, pos_col);
+
+
+        return is_terminal;
 
     }
 
